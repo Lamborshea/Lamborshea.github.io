@@ -225,6 +225,76 @@
     <header class="post-header">
       <h1 class="post-title">
         
+          <a class="post-link" href="/2018/10/13/JavaScript之声明提升/">JavaScript之声明提升</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-10-13
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <blockquote>
+<p>本文一共 700 字，读完只需 4 分钟</p>
+</blockquote>
+<h4 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h4><p>JS 中，我们会理所当然地认为代码是一句一句地执行的，但并不完全正确。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">singer = <span class="string">"周杰伦"</span>;</span><br><span class="line"><span class="keyword">var</span> singer;</span><br><span class="line"><span class="built_in">console</span>.log(singer); <span class="comment">// 周杰伦</span></span><br><span class="line"></span><br><span class="line">sing(); <span class="comment">// 故事的小黄花</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sing</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"故事的小黄花"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上第一段代码，如果按照正常流程，后面的 <code>var singer</code>会重新把值默认声明为 <code>undefined</code>，但结果却是 ‘周杰伦’；</p>
+<p>以上第二段代码，会理解成，先执行，后声明，就会报错，但结果却没有。</p>
+<p>以上代码块其实是可以改写成这样的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> singer = <span class="literal">undefined</span>;</span><br><span class="line">singer = <span class="string">"周杰伦"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(singer); <span class="comment">// 周杰伦</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sing</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"故事的小黄花"</span>);</span><br><span class="line">&#125;</span><br><span class="line">sing(); <span class="comment">// 故事的小黄花</span></span><br></pre></td></tr></table></figure>
+<p>这是因为：</p>
+<blockquote>
+<p>JS 定义声明会在编译阶段进行，赋值和其他操作则是在执行阶段进行。</p>
+</blockquote>
+<p>所以，<strong>先有声明，再有赋值和执行</strong>，这就是变量和函数的声明提升。</p>
+<h4 id="二、函数声明优先于变量声明；"><a href="#二、函数声明优先于变量声明；" class="headerlink" title="二、函数声明优先于变量声明；"></a>二、函数声明优先于变量声明；</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = <span class="string">"bar"</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">typeOf(foo); <span class="comment">// string</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> foo = <span class="string">"bar"</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">typeOf(foo); <span class="comment">// string</span></span><br></pre></td></tr></table></figure>
+<p>无论函数声明放在变量声明前，还是后，变量声明都覆盖了函数声明。</p>
+<h4 id="三、每个域都会进行声明提升"><a href="#三、每个域都会进行声明提升" class="headerlink" title="三、每个域都会进行声明提升"></a>三、每个域都会进行声明提升</h4><p>以下代码会输出 10，是为什么呢？</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!foo) &#123;</span><br><span class="line">    <span class="keyword">var</span> foo = <span class="number">10</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  alert(foo);</span><br><span class="line">&#125;</span><br><span class="line">bar();</span><br></pre></td></tr></table></figure>
+<p>因为:</p>
+<blockquote>
+<p>每个域都会进行声明提升。</p>
+</blockquote>
+<p>上面代码相当于：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> foo = <span class="literal">undefined</span>;</span><br><span class="line">  <span class="keyword">if</span> (!foo) &#123;</span><br><span class="line">    <span class="comment">// !foo === true</span></span><br><span class="line">    <span class="keyword">var</span> foo = <span class="number">10</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  alert(foo);</span><br><span class="line">&#125;</span><br><span class="line">bar();</span><br></pre></td></tr></table></figure>
+<h4 id="四、函数表达式不会声明提升"><a href="#四、函数表达式不会声明提升" class="headerlink" title="四、函数表达式不会声明提升"></a>四、函数表达式不会声明提升</h4><p>首先，什么是函数表达式？</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数声明</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"函数声明"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数表达式</span></span><br><span class="line"><span class="keyword">var</span> foo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"函数表达式"</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>函数表达式，不会声明提升，所以：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">foo(); <span class="comment">// Uncaught TypeError: foo is not a function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数表达式</span></span><br><span class="line"><span class="keyword">var</span> foo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"函数表达式"</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>JavaScript 中存在一种声明提升的机制，有变量声明和函数声明。JS 引擎会在编译阶段查找每个作用域的声明，而赋值和运算则在执行时进行。</p>
+<p>函数定义分为函数声明和函数表达式，其中，函数声明有声明提升，函数表达式则没有。</p>
+
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
           <a class="post-link" href="/2018/10/13/javascript变量及作用域/">Javascript变量及作用域</a>
         
       </h1>
