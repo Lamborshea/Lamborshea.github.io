@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://lamborshea.github.io/categories/index-1.html</loc>
+    
+    <lastmod>2018-10-17T02:41:34.788Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://lamborshea.github.io/tags/index-1.html</loc>
+    
+    <lastmod>2018-10-17T02:41:12.038Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://lamborshea.github.io/2018/10/13/javascript%E5%8F%98%E9%87%8F%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/</loc>
     
     <lastmod>2018-10-17T02:35:05.983Z</lastmod>
