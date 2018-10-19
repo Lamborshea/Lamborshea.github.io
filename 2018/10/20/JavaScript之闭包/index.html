@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="当函数记住并访问所在词法作用域的自由变量时，就产生了闭包，即使函数是在当前词法作用域外执行。"/>
+
+
+
+
+  <meta name="keywords" content="树洞 前端 博客 自留地" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="种瓜南山下">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.9.0" />
+
+
+
+<link rel="canonical" href="http://lamborshea.github.io/2018/10/20/JavaScript之闭包/"/>
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.9.0" />
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+<script>
+  window.config = {"title":"种瓜南山下","subtitle":"To see the world.","description":"种瓜南山下，南瓜，南瓜的个人博客，前端博客，全栈博客","author":"南瓜","language":"zh-cmn-Hans","timezone":null,"url":"http://lamborshea.github.io","root":"/","permalink":":year/:month/:day/:title/","permalink_defaults":null,"source_dir":"source","public_dir":"public","tag_dir":"tags","archive_dir":"archives","category_dir":"categories","code_dir":"downloads/code","i18n_dir":":lang","skip_render":null,"new_post_name":":title.md","default_layout":"post","titlecase":true,"external_link":true,"filename_case":0,"render_drafts":false,"post_asset_folder":false,"relative_link":false,"future":true,"highlight":{"enable":true,"auto_detect":true,"line_number":true,"tab_replace":null,"first_line_number":"always1"},"default_category":"uncategorized","category_map":null,"tag_map":null,"date_format":"YYYY-MM-DD","time_format":"HH:mm:ss","per_page":10,"pagination_dir":"page","theme":"even","deploy":{"type":"git","repo":{"github":"git@github.com:Lamborshea/lamborshea.github.io.git,master","coding":"git@git.coding.net:nanbo/nanbo.git,master"}},"ignore":[],"keywords":"树洞 前端 博客 自留地","index_generator":{"per_page":10,"order_by":"-date","path":""},"archive_generator":{"per_page":10,"yearly":true,"monthly":true,"daily":false},"baidusitemap":{"path":"baidusitemap.xml"},"category_generator":{"per_page":10},"sitemap":{"path":"sitemap.xml"},"tag_generator":{"per_page":10},"marked":{"gfm":true,"pedantic":false,"sanitize":false,"tables":true,"breaks":true,"smartLists":true,"smartypants":true,"modifyAnchors":"","autolink":true},"server":{"port":4000,"log":false,"ip":"0.0.0.0","compress":false,"header":true},"since":2015,"favicon":"/favicon.ico","rss":"default","menu":{"Home":"/","Archives":"/archives/","Tags":"/tags","Categories":"/categories","About":"/about"},"color":"Default","toc":true,"fancybox":true,"pjax":true,"copyright":{"enable":true,"license":"<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\">知识共享署名-非商业性使用 4.0 国际许可协议</a>"},"reward":{"enable":false,"qrCode":{"wechat":null,"alipay":null}},"social":{"email":"nanbo0810@email.com","stack-overflow":null,"twitter":null,"facebook":null,"linkedin":null,"google":null,"github":"https://github.com/Lamborshea","weibo":null,"zhihu":"zhihu.com/people/xienanbo","douban":null,"pocket":null,"tumblr":null,"instagram":null},"leancloud":{"app_id":null,"app_key":null},"baidu_analytics":null,"baidu_verification":null,"google_analytics":null,"google_verification":null,"disqus_shortname":null,"changyan":{"appid":null,"appkey":null},"livere_datauid":null,"version":"2.9.0"};
+</script>
+
+    <title> JavaScript之闭包 - 种瓜南山下 </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">种瓜南山下</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            标签
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            分类
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            关于
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">种瓜南山下</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              标签
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              分类
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              关于
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JavaScript之闭包
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-10-20
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#概述"><span class="toc-text">概述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一、什么是闭包"><span class="toc-text">一、什么是闭包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、执行过程"><span class="toc-text">二、执行过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、函数式语言"><span class="toc-text">三、函数式语言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四、自由变量"><span class="toc-text">四、自由变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#五、闭包的用处和缺点"><span class="toc-text">五、闭包的用处和缺点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div>
+
+
+
+    <div class="post-content">
+      
+        <blockquote>
+<p>本文一共 1300 字，读完只需 5 分钟</p>
+</blockquote>
+<h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p><code>闭包</code>, 可以说是每个前端工程师都听说的一个词，咋一看很难从字面上去理解，从而给人留下了<code>闭包</code>是一个重要又难以理解的概念。</p>
+<p>但是，闭包在 JS 代码可以说是随处可见，闭包也只是计算机领域的一个概念而已，它的存在是因为 JS 的一些语言特性，比如：<code>函数式语言</code>，<code>执行上下文</code>，<code>执行上下文栈</code>,<code>作用域链</code>，<code>词法作用域</code>。</p>
+<p>执行上下文：Execution Context<br>执行上下文栈：Execution Context Stack<br>作用域链：Scope Chain<br>作用域：Scope</p>
+<p>本篇文章，将先给结论，到底什么是闭包，再来分析产生闭包的过程和原因。</p>
+<h4 id="一、什么是闭包"><a href="#一、什么是闭包" class="headerlink" title="一、什么是闭包"></a>一、什么是闭包</h4><blockquote>
+<p>当函数记住并访问所在词法作用域的自由变量时，就产生了闭包，即使函数是在当前词法作用域外执行。<br>–《你不知道的 JavaScript》</p>
+</blockquote>
+<p>来段经典的闭包代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outter</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="number">123</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">inner</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> inner;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> foo = outter();</span><br><span class="line">foo(); <span class="comment">// 123</span></span><br></pre></td></tr></table></figure>
+<p>内部函数 inner 记住了它被定义时的词法作用域，也就是 outter 的函数作用域，并访问了该作用域里的自由变量 a, 同时，inner 函数作用返回值，在外部作用域中被执行。</p>
+<p>以上描述，全部符合闭包的描述，那这就是<code>闭包</code>。</p>
+<h4 id="二、执行过程"><a href="#二、执行过程" class="headerlink" title="二、执行过程"></a>二、执行过程</h4><p>之前的文章讲了函数的执行上下文栈，变量对象，作用域链等内容，接下来通过闭包代码回顾代码是怎么样的执行过程。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outter</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="number">123</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">inner</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> inner;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> foo = outter();</span><br><span class="line">foo(); <span class="comment">// 123</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>进入全局代码的执行上下文，全局上下文被压入执行上下文栈。</li>
+</ol>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ECStack</span> = [</span><br><span class="line">        globalContext</span><br><span class="line">    ]<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>全局上下文创建全局变量对象，创建 this 并指向全局上下文。</li>
+</ol>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">globalContext = &#123;</span><br><span class="line">    VO: <span class="keyword">global</span>,</span><br><span class="line">    scope: [<span class="keyword">global</span>.VO],</span><br><span class="line">    <span class="keyword">this</span>: <span class="keyword">global</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>全局上下文初始化时，outter 函数被创建，建立作用域链，复制 Scope 属性到 outter 函数的内部属性[[scope]]</li>
+</ol>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">outter.<span class="string">[[scope]]</span> = [</span><br><span class="line">  globalContext.VO</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<ol>
+<li>执行 outter 函数，创建 outter 函数执行上下文，将 outter 上下文压入执行上下文栈。</li>
+</ol>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ECStack</span> = [</span><br><span class="line">        globalContext,</span><br><span class="line">        outterContext</span><br><span class="line">    ];</span><br></pre></td></tr></table></figure>
+<ol>
+<li>初始化 outter 函数执行上下文，用 arguments 创建活动对象，加入形参、函数声明、变量声明。将活动对象压入 outter 作用域链顶端。</li>
+</ol>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">outterContext = &#123;</span><br><span class="line"><span class="symbol">    AO:</span> &#123;</span><br><span class="line"><span class="symbol">        arguments:</span> &#123;</span><br><span class="line"><span class="symbol">            a:</span> undefined,</span><br><span class="line">        &#125;</span><br><span class="line"><span class="symbol">        length:</span> <span class="number">1</span></span><br><span class="line">    &#125;,</span><br><span class="line"><span class="symbol">    scope:</span> undefined,</span><br><span class="line"><span class="symbol">    inner:</span> reference to function inner()&#123;&#125;</span><br><span class="line"><span class="symbol">    Scope:</span> [AO, globalContext.VO],</span><br><span class="line"><span class="symbol">    this:</span> undefined</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>outter 执行完毕，接着执行 outter 返回的被变量引用的函数 inner;</li>
+</ol>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ECStack</span> = [</span><br><span class="line">        globalContext,</span><br><span class="line">        innerContext</span><br><span class="line">    ];</span><br></pre></td></tr></table></figure>
+<ol>
+<li>inner 函数初始化，过程和第 4 步一样。</li>
+</ol>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">innerContext = &#123;</span><br><span class="line"><span class="symbol">        AO:</span> &#123;</span><br><span class="line"><span class="symbol">            arguments:</span> &#123;</span><br><span class="line"><span class="symbol">                length:</span> <span class="number">0</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line"><span class="symbol">        Scope:</span> [AO, outterContext.AO, globalContext.VO],</span><br><span class="line"><span class="symbol">        this:</span> undefined</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>inner 执行，沿着作用域链查找变量 a, 打印 a 值。</li>
+<li>inner 函数执行结束，弹出执行上下文栈。</li>
+</ol>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ECStack</span> = [</span><br><span class="line">        globalContext</span><br><span class="line">    ]<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<p>在这个过程中，第 5 步，outter 已经执行结束，执行上下文按理来说已经被销毁，内部函数 inner 怎么还能访问 outter 作用域的变量呢。</p>
+<p>正是由于闭包，inner 引用了它所在词法作用域的自由变量 a，inner 的作用域链中仍然是完整的, 尽管 inner 在其他地方执行，还是返回了正确结果。</p>
+<h4 id="三、函数式语言"><a href="#三、函数式语言" class="headerlink" title="三、函数式语言"></a>三、函数式语言</h4><p>闭包中，一个很重要的特点就是，内部函数作为一个数据被返回。这是由于 JS 是函数式语言，函数可以作为参数传递进函数，也可以作为一个数据返回。函数的嵌套构成了作用域的嵌套，也就有了作用域链。</p>
+<p>由于函数具有作用域，且变量的寻找具有 “遮蔽效应”（从内到外，找到第一个就停止），使得局部作用域的变量对于外部作用域是不可见的，于是函数就有了封闭性，所以我们拿函数来包裹封装私有变量，同时也有了闭包。</p>
+<h4 id="四、自由变量"><a href="#四、自由变量" class="headerlink" title="四、自由变量"></a>四、自由变量</h4><blockquote>
+<p>自由变量是指在函数中使用的，但既不是函数参数也不是函数的局部变量的变量。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outter</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="number">123</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">inner</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> inner;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> foo = outter();</span><br><span class="line">foo(); <span class="comment">// 123</span></span><br></pre></td></tr></table></figure>
+<p>对于 inner 函数而言，变量 a, 不是它的函数参数，也不是它的局部变量，a 就是自由变量。</p>
+<h4 id="五、闭包的用处和缺点"><a href="#五、闭包的用处和缺点" class="headerlink" title="五、闭包的用处和缺点"></a>五、闭包的用处和缺点</h4><p>从闭包的特点可以看出，自由变量保存在了内存中，并能间接访问。</p>
+<p>那么闭包的作用就是：</p>
+<blockquote>
+<p>隐藏私有变量，解决变量命名空间污染的问题。</p>
+</blockquote>
+<p><strong>缺点</strong><br>如果闭包过多，变量常驻内存，肯定会占用大量内存空间。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>由于 JS 是函数式语言，当函数记住并访问所在词法作用域的自由变量时，就产生了闭包，即使函数是在当前词法作用域外执行。</p>
+<p>闭包在 JS 代码中非常常见，不必把它想得太玄乎。</p>
+<p>欢迎关注我的个人公众号“谢南波”，专注分享原创文章。<br><img src="https://user-gold-cdn.xitu.io/2018/10/17/16682a6a51b62e37?w=1280&amp;h=1280&amp;f=jpeg&amp;s=159673" alt=""></p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://lamborshea.github.io">南瓜</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://lamborshea.github.io/2018/10/20/JavaScript之闭包/">http://lamborshea.github.io/2018/10/20/JavaScript之闭包/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/js/">js</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/10/18/JavaScript之作用域链/">
+        <span class="next-text nav-default">JavaScript之作用域链</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:nanbo0810@email.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://github.com/Lamborshea" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+        
+          <a href="/zhihu.com/people/xienanbo" class="iconfont icon-zhihu" title="zhihu"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2015 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">南瓜</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.9.0"></script>
+
+  </body>
+</html>
