@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="ECMAScript 中所有函数的参数都是按值传递的"/>
+
+
+
+
+  <meta name="keywords" content="树洞 前端 博客 自留地" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="种瓜南山下">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.9.0" />
+
+
+
+<link rel="canonical" href="http://lamborshea.github.io/2018/10/24/JavaScript之按值传递/"/>
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.9.0" />
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+<script>
+  window.config = {"title":"种瓜南山下","subtitle":"To see the world.","description":"种瓜南山下，南瓜，南瓜的个人博客，前端博客，全栈博客","author":"南瓜","language":"zh-cmn-Hans","timezone":null,"url":"http://lamborshea.github.io","root":"/","permalink":":year/:month/:day/:title/","permalink_defaults":null,"source_dir":"source","public_dir":"public","tag_dir":"tags","archive_dir":"archives","category_dir":"categories","code_dir":"downloads/code","i18n_dir":":lang","skip_render":null,"new_post_name":":title.md","default_layout":"post","titlecase":true,"external_link":true,"filename_case":0,"render_drafts":false,"post_asset_folder":false,"relative_link":false,"future":true,"highlight":{"enable":true,"auto_detect":true,"line_number":true,"tab_replace":null,"first_line_number":"always1"},"default_category":"uncategorized","category_map":null,"tag_map":null,"date_format":"YYYY-MM-DD","time_format":"HH:mm:ss","per_page":10,"pagination_dir":"page","theme":"even","deploy":{"type":"git","repo":{"github":"git@github.com:Lamborshea/lamborshea.github.io.git,master","coding":"git@git.coding.net:nanbo/nanbo.git,master"}},"ignore":[],"keywords":"树洞 前端 博客 自留地","index_generator":{"per_page":10,"order_by":"-date","path":""},"baidusitemap":{"path":"baidusitemap.xml"},"archive_generator":{"per_page":10,"yearly":true,"monthly":true,"daily":false},"category_generator":{"per_page":10},"sitemap":{"path":"sitemap.xml"},"tag_generator":{"per_page":10},"marked":{"gfm":true,"pedantic":false,"sanitize":false,"tables":true,"breaks":true,"smartLists":true,"smartypants":true,"modifyAnchors":"","autolink":true},"server":{"port":4000,"log":false,"ip":"0.0.0.0","compress":false,"header":true},"since":2015,"favicon":"/favicon.ico","rss":"default","menu":{"Home":"/","Archives":"/archives/","Tags":"/tags","Categories":"/categories","About":"/about"},"color":"Default","toc":true,"fancybox":true,"pjax":true,"copyright":{"enable":true,"license":"<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\">知识共享署名-非商业性使用 4.0 国际许可协议</a>"},"reward":{"enable":false,"qrCode":{"wechat":null,"alipay":null}},"social":{"email":"nanbo0810@email.com","stack-overflow":null,"twitter":null,"facebook":null,"linkedin":null,"google":null,"github":"https://github.com/Lamborshea","weibo":null,"zhihu":"zhihu.com/people/xienanbo","douban":null,"pocket":null,"tumblr":null,"instagram":null},"leancloud":{"app_id":null,"app_key":null},"baidu_analytics":null,"baidu_verification":null,"google_analytics":null,"google_verification":null,"disqus_shortname":null,"changyan":{"appid":null,"appkey":null},"livere_datauid":null,"version":"2.9.0"};
+</script>
+
+    <title> JavaScript之按值传递 - 种瓜南山下 </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">种瓜南山下</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            标签
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            分类
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            关于
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">种瓜南山下</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              标签
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              分类
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              关于
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JavaScript之按值传递
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-10-24
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#概述"><span class="toc-text">概述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一、数据类型"><span class="toc-text">一、数据类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、按值传递"><span class="toc-text">二、按值传递</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、“按引用传递”"><span class="toc-text">二、“按引用传递”</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、按共享传递"><span class="toc-text">三、按共享传递</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div>
+
+
+
+    <div class="post-content">
+      
+        <blockquote>
+<p>本文共 1200 字，读完只需 5 分钟</p>
+</blockquote>
+<h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>参数的传递分为<code>按值传递</code>和<code>按引用传递</code>，而 JavaScript 中参数的传递<strong>只有</strong><code>按值传递</code>。</p>
+<blockquote>
+<p>ECMAScript 中所有函数的参数都是按值传递的。</p>
+</blockquote>
+<p>所谓按值传递就是：</p>
+<blockquote>
+<p>把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。 – 《JavaScript 高级程序设计》</p>
+</blockquote>
+<p>我们知道 JS 中，既有基本数据类型又有引用数据类型，那么二者的按值传递有什么样的区别呢？</p>
+<p>先给结论</p>
+<blockquote>
+<p>在向参数传递基本数据类型时，被传递的值会被复制给一个局部变量（arguments 类数组对象中的一个元素）。在向参数传递引用数据类型时，会把这个值的内存地址赋给一个局部变量。</p>
+</blockquote>
+<h4 id="一、数据类型"><a href="#一、数据类型" class="headerlink" title="一、数据类型"></a>一、数据类型</h4><p>在 JS 中，数据类型分为基本类型和引用类型。</p>
+<p>其中基本类型包括：number, string, boolean, undefined, null, Symbol(es 6 新增)。基本类型的值是保存在栈内存当中的。</p>
+<p>基本数据类型的值本身是不会改变的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> num1 = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">let</span> num2 = num1;</span><br></pre></td></tr></table></figure>
+<p><img src="http://outf8u7ws.bkt.clouddn.com/img/20181023231549.png" alt=""></p>
+<p>将保存着原始值的变量 num1 赋值给 num2 后，会将原始值 num1 的副本赋值给新变量 num2, 此后这两个变量是完全独立的，他们只是拥有相同的值而已，是完全独立的拷贝，互不干涉。</p>
+<p>引用数据类型包括：Function, Array, Object 等等除了基本数据类型之外的数据。引用数据类型是保存在堆内存当中的。</p>
+<p>JS 不允许直接操作对象的内存空间，所以引用数据类型是通过存储在变量处的值，也就是一个指针（point），指向存储对象的内存地址，从而进行访问的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj1 = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj2 = obj1;</span><br></pre></td></tr></table></figure>
+<p><img src="http://outf8u7ws.bkt.clouddn.com/img/20181023233134.png" alt=""></p>
+<p>当把引用类型的变量 obj1 赋给另一个变量 obj2 后，obj2 接受的其实是引用类型数据的内存地址指针。所以，判断两个引用类型是否相等，其实比较的是内存地址是否相等。</p>
+<h4 id="二、按值传递"><a href="#二、按值传递" class="headerlink" title="二、按值传递"></a>二、按值传递</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> num = <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">param</span>) </span>&#123;</span><br><span class="line">  param = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line">foo(num);</span><br><span class="line"><span class="built_in">console</span>.log(num); <span class="comment">// num 值仍为1, 并没有受 param = 2 赋值影响</span></span><br></pre></td></tr></table></figure>
+<p>以上代码：</p>
+<p>按值传递每次传递参数时，都会拷贝一份副本到函数内部，拷贝前后的两个值互不影响。</p>
+<h4 id="二、“按引用传递”"><a href="#二、“按引用传递”" class="headerlink" title="二、“按引用传递”"></a>二、“按引用传递”</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  num: <span class="number">1</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">o</span>) </span>&#123;</span><br><span class="line">  o.num = <span class="number">2</span>;</span><br><span class="line">  <span class="built_in">console</span>.log(obj.num); <span class="comment">// 2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(obj);</span><br><span class="line"><span class="built_in">console</span>.log(obj.num); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>以上代码，foo 函数把 obj 对象作为实参，执行完毕后把 obj 对象的 num 属性给改变了，说明参数 o 对象 和 外部变量 obj 对象是同一个对象。说好的按值传递呢，怎么还是把原来的对象给改变了呢。</p>
+<h4 id="三、按共享传递"><a href="#三、按共享传递" class="headerlink" title="三、按共享传递"></a>三、按共享传递</h4><p>再看下面这段代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  num: <span class="number">1</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">o</span>) </span>&#123;</span><br><span class="line">  o = <span class="number">100</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(obj);</span><br><span class="line"><span class="built_in">console</span>.log(obj.num); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<p>如果是按引用传递的话，按理来说 obj 对象会被改变会 100 才对。</p>
+<p>准确的说，JS 中的基本类型按值传递，对象类型按共享传递的(call by sharing，也叫按对象传递、按对象共享传递)</p>
+<blockquote>
+<p>在共享传递中对函数形参的赋值，不会影响实参本身的值。</p>
+</blockquote>
+<p>所以，形参引用的对象是同一个，由于对象是可变的（mutable），修改形参中对象的属性值，会影响到原本对象的属性值。</p>
+<p>按引用传递是传递对象的引用，而按共享传递是传递对象的拷贝的副本，所以副本本身无法直接修改。而拷贝副本也是一种拷贝，所以也被认为是按值传递。</p>
+<p>基本类型本身是按值传递，具有不可变性（immutable），对基本类型的修改，实质上都是在栈内存中创建了新的值。</p>
+<p>复习巩固：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123; <span class="attr">num</span>: <span class="number">0</span> &#125;;</span><br><span class="line">obj.num = <span class="number">100</span>;</span><br><span class="line"><span class="keyword">var</span> o = obj;</span><br><span class="line">o.num = <span class="number">1</span>;</span><br><span class="line">obj.num; <span class="comment">// 1, 被修改</span></span><br><span class="line">o = <span class="literal">true</span>;</span><br><span class="line">obj.num; <span class="comment">// 1,  o 是对象的一个拷贝，对 o 本身的修改，不会改变 obj 对象本身的值。</span></span><br></pre></td></tr></table></figure>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>JavaScript 中参数的传递<strong>只有</strong><code>按值传递</code>，而对于引用类型的传递，是一种共享传递，传递的是数据类型的拷贝副本，虽然引用的是同一个对象，但是无法通过改变形参来改变实参本身。</p>
+<p>JS 中把这种拷贝也认为是按值传递。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://lamborshea.github.io">南瓜</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://lamborshea.github.io/2018/10/24/JavaScript之按值传递/">http://lamborshea.github.io/2018/10/24/JavaScript之按值传递/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/js/">js</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/10/22/JavaScript之执行上下文/">
+        <span class="next-text nav-default">JavaScript之执行上下文</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:nanbo0810@email.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://github.com/Lamborshea" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+        
+          <a href="/zhihu.com/people/xienanbo" class="iconfont icon-zhihu" title="zhihu"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2015 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">南瓜</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.9.0"></script>
+
+  </body>
+</html>
