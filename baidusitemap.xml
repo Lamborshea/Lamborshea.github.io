@@ -4,6 +4,40 @@
 
     
   <url>
+    <loc>http://lamborshea.github.io/2018/11/11/%E4%BF%AE%E6%94%B9Idea%E7%BB%88%E7%AB%AFTerminal%E4%B8%BAGitBash%E6%88%96Cmder/</loc>
+    <lastmod>2018-11-11T15:20:25.344Z</lastmod>
+    <data>
+        <display>
+        <title>修改Idea终端Terminal为GitBash或Cmder</title>
+        <pubTime>2018-11-11T15:19:49.000Z</pubTime>
+        
+        <tag>工具</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://lamborshea.github.io/2018/10/28/JavaScript%E4%B9%8Barguments/</loc>
+    <lastmod>2018-11-10T14:25:19.360Z</lastmod>
+    <data>
+        <display>
+        <title>JavaScript之arguments</title>
+        <pubTime>2018-10-28T06:21:40.000Z</pubTime>
+        
+        <tag>js</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://lamborshea.github.io/2018/11/10/JavaScript%E4%B8%93%E9%A2%98%E4%B9%8B%E6%A8%A1%E6%8B%9F%E5%AE%9E%E7%8E%B0new/</loc>
     <lastmod>2018-11-10T13:24:25.977Z</lastmod>
     <data>
@@ -44,23 +78,6 @@
         <display>
         <title>JavaScript专题之模拟实现call和apply</title>
         <pubTime>2018-10-29T14:30:39.000Z</pubTime>
-        
-        <tag>js</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://lamborshea.github.io/2018/10/28/JavaScript%E4%B9%8Barguments/</loc>
-    <lastmod>2018-10-28T06:22:37.516Z</lastmod>
-    <data>
-        <display>
-        <title>JavaScript之arguments</title>
-        <pubTime>2018-10-28T06:21:40.000Z</pubTime>
         
         <tag>js</tag>
          
