@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="用户与网页的交互是通过事件进行的，事件模型分为事件冒泡和事件捕获，事件冒泡的兼容性更好，应用更广，同时通过事件冒泡，可以建立事件委托，提升网页性能。"/>
+
+
+
+
+  <meta name="keywords" content="树洞 前端 博客 自留地" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="种瓜南山下">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.9.0" />
+
+
+
+<link rel="canonical" href="http://lamborshea.github.io/2018/11/21/JS专题之事件模型/"/>
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.9.0" />
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+<script>
+  window.config = {"title":"种瓜南山下","subtitle":"To see the world.","description":"种瓜南山下，南瓜，南瓜的个人博客，前端博客，全栈博客","author":"南瓜","language":"zh-cmn-Hans","timezone":null,"url":"http://lamborshea.github.io","root":"/","permalink":":year/:month/:day/:title/","permalink_defaults":null,"source_dir":"source","public_dir":"public","tag_dir":"tags","archive_dir":"archives","category_dir":"categories","code_dir":"downloads/code","i18n_dir":":lang","skip_render":null,"new_post_name":":title.md","default_layout":"post","titlecase":true,"external_link":true,"filename_case":0,"render_drafts":false,"post_asset_folder":false,"relative_link":false,"future":true,"highlight":{"enable":true,"auto_detect":true,"line_number":true,"tab_replace":null,"first_line_number":"always1"},"default_category":"uncategorized","category_map":null,"tag_map":null,"date_format":"YYYY-MM-DD","time_format":"HH:mm:ss","per_page":20,"pagination_dir":"page","theme":"even","deploy":{"type":"git","repo":{"github":"git@github.com:Lamborshea/lamborshea.github.io.git,master","coding":"git@git.coding.net:nanbo/nanbo.git,master"}},"ignore":[],"keywords":"树洞 前端 博客 自留地","index_generator":{"per_page":20,"order_by":"-date","path":""},"baidusitemap":{"path":"baidusitemap.xml"},"archive_generator":{"per_page":20,"yearly":true,"monthly":true,"daily":false},"category_generator":{"per_page":20},"sitemap":{"path":"sitemap.xml"},"marked":{"gfm":true,"pedantic":false,"sanitize":false,"tables":true,"breaks":true,"smartLists":true,"smartypants":true,"modifyAnchors":"","autolink":true},"tag_generator":{"per_page":20},"server":{"port":4000,"log":false,"ip":"0.0.0.0","compress":false,"header":true},"since":2015,"favicon":"/favicon.ico","rss":"default","menu":{"Home":"/","Archives":"/archives/","Tags":"/tags","Categories":"/categories","About":"/about"},"color":"Default","toc":true,"fancybox":true,"pjax":true,"copyright":{"enable":true,"license":"<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\">知识共享署名-非商业性使用 4.0 国际许可协议</a>"},"reward":{"enable":false,"qrCode":{"wechat":null,"alipay":null}},"social":{"email":"nanbo0810@email.com","stack-overflow":null,"twitter":null,"facebook":null,"linkedin":null,"google":null,"github":"https://github.com/Lamborshea","weibo":null,"zhihu":"zhihu.com/people/xienanbo","douban":null,"pocket":null,"tumblr":null,"instagram":null},"leancloud":{"app_id":null,"app_key":null},"baidu_analytics":null,"baidu_verification":null,"google_analytics":null,"google_verification":null,"disqus_shortname":null,"changyan":{"appid":null,"appkey":null},"livere_datauid":null,"version":"2.9.0"};
+</script>
+
+    <title> JS专题之事件模型 - 种瓜南山下 </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">种瓜南山下</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            标签
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            分类
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            关于
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">种瓜南山下</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              标签
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              分类
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              关于
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JS专题之事件模型
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-11-21
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#事件"><span class="toc-text">事件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一、事件冒泡"><span class="toc-text">一、事件冒泡</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、事件捕获"><span class="toc-text">二、事件捕获</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、事件流"><span class="toc-text">三、事件流</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四、事件绑定"><span class="toc-text">四、事件绑定</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#五、事件委托（事件代理）"><span class="toc-text">五、事件委托（事件代理）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div>
+
+
+
+    <div class="post-content">
+      
+        <blockquote>
+<p>本文共 1960 字，读完只需 8 分钟</p>
+</blockquote>
+<h4 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h4><p>用户与网页交互是通过事件实现的，事件刚开始是作为分担服务器负载的一个手段，起初没有统一的规范，直到 DOM2 级，网景和 IE 才开始有各自的 API 规范。</p>
+<p>对于事件的触发机制，两个公司都认为页面的触发机制并不只是点击了某个元素，就只触发当前目标元素的事件。</p>
+<p>比方说：页面有多个同心圆，当点击最里面的圆时，你其实也点击了包含这个圆外面的那些圆。 两个公司对这点的认同是一致的，但是事件流的传播顺序上采用了不同的两种方案来实现，即事件冒泡和事件捕获。</p>
+<h4 id="一、事件冒泡"><a href="#一、事件冒泡" class="headerlink" title="一、事件冒泡"></a>一、事件冒泡</h4><p>IE 浏览器从老版本开始就一直支持事件冒泡机制，所谓事件冒泡，指事件流开始是从较为具体的元素接收，一直传播上不具体的元素上。</p>
+<p>就是从目标元素传播到父级元素。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"parent"</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"child"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">childEventHandler</span><span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="string">"child 被点击了"</span>);</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">parentEventHandler</span><span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="string">"parent 被点击了"</span>);</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">bodyEventHandler</span><span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="string">"body 被点击了"</span>);</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">htmlEventHandler</span><span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="string">"html 被点击了"</span>);</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">documentEventHandler</span><span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="string">"document 被点击了"</span>);</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">windowEventHandler</span><span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="keyword">this</span>);</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="string">"window 被点击了"</span>);</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> bodyEl = <span class="built_in">document</span>.getElementsByTagName(<span class="string">"body"</span>)[<span class="number">0</span>];</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> htmlEl = <span class="built_in">document</span>.getElementsByTagName(<span class="string">"html"</span>)[<span class="number">0</span>];</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> win = <span class="built_in">window</span>;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> parentEl = <span class="built_in">document</span>.getElementById(<span class="string">"parent"</span>);</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> childEl = <span class="built_in">document</span>.getElementById(<span class="string">"child"</span>);</span></span><br><span class="line"><span class="undefined">    childEl.onclick = childEventHandler;</span></span><br><span class="line"><span class="undefined">    parentEl.onclick = parentEventHandler;</span></span><br><span class="line"><span class="undefined">    bodyEl.onclick = bodyEventHandler;</span></span><br><span class="line"><span class="undefined">    htmlEl.onclick = htmlEventHandler;</span></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.onclick = documentEventHandler;</span></span><br><span class="line"><span class="undefined">    win.onclick = windowEventHandler;</span></span><br><span class="line"><span class="undefined">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如下图所示，如果点击了 id 为 child 的元素后，事件流会从 child 一直传播到 window 对象。</p>
+<p><img src="http://qiniu.xienanbo.com/img/20181120235212.png" alt=""></p>
+<p><img src="http://qiniu.xienanbo.com/img/20181120234253.png" alt=""></p>
+<p>所有现代浏览器都支持事件冒泡。</p>
+<h4 id="二、事件捕获"><a href="#二、事件捕获" class="headerlink" title="二、事件捕获"></a>二、事件捕获</h4><p>由网景公司主导的事件捕获则刚好和事件冒泡相反，事件流开始从不具体的元素触发，然后传播到具体的元素上。简而言之就是从父级元素传播到目标元素。</p>
+<p><img src="http://qiniu.xienanbo.com/img/20181120235920.png" alt=""></p>
+<p>由于事件捕获是从 IE 9 开始支持，不兼容老版本浏览器，所以使用的人比较少。</p>
+<h4 id="三、事件流"><a href="#三、事件流" class="headerlink" title="三、事件流"></a>三、事件流</h4><p>DOM 规定事件包括三个阶段，事件捕获，处于目标阶段、事件冒泡。</p>
+<p>从 IE 9 开始的浏览器规定，事件流的顺序先是事件捕获，会截获到事件，然后是处于目标阶段，实际的目标接收到事件，最后是事件冒泡，可以在这个阶段对事件进行响应。</p>
+<p>以之前的 child 元素为例，直到 child 元素接收到事件前（从 window 到 parent），都是事件捕获阶段。到了 child 元素，此时对事件进行处理，随后冒泡到 window 对象上，冒泡阶段也是可以对事件进行处理的。 基于事件冒泡能对事件进行处理的特点，随后将讲到与其有关的事件委托机制。</p>
+<p><img src="http://qiniu.xienanbo.com/img/20181121001513.png" alt=""></p>
+<h4 id="四、事件绑定"><a href="#四、事件绑定" class="headerlink" title="四、事件绑定"></a>四、事件绑定</h4><p>HTML 与 事件的绑定有三种形式：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1.</span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"child"</span> <span class="attr">onclick</span>=<span class="string">"console.log('hello');"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">2. var childEl = document.getElementById("child"); childEl.onclick = function()</span><br><span class="line">&#123; console.log('hello'); &#125; 3. var childEl = document.getElementById("child");</span><br><span class="line">childEl.addEventListener('click', function() &#123; console.log('hello'); &#125;, false);</span><br></pre></td></tr></table></figure>
+<p>JavaScript 是单线程的语言，在遇到元素有事件触发时，会在事件队列中寻找有没有与这个事件绑定的函数，如果没有则什么都不做，如果有，则将该函数放到事件队列的前面，等待主线程事件执行完毕后执行。</p>
+<p>上述代码第一种绑定，将事件写在 html 中，表现和行为没有解耦，是不建议这样写代码的。</p>
+<p>第二种绑定，将事件绑定在元素对象上，这种写法主要是容易发生事件的覆盖。</p>
+<p>第三种绑定，首先，第三个参数为布尔值，默认为 false, 表示在事件冒泡阶段调用事件处理程序，如果为 true, 则表示在事件捕获阶段调用事件处理函数。</p>
+<p>当我们想处理完一次事件后，将不想在处理该元素的事件绑定时，应该将元素的事件绑定置为空，如果容易发生内存泄漏。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">第一种写法：</span><br><span class="line">childEl.onclick = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">第三种写法：</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">eventHandler</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'hello'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">childEl.addEventListener(<span class="string">'click'</span>, eventHandler, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">childEl.removeEventListener(<span class="string">'click'</span>, eventHandler, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="五、事件委托（事件代理）"><a href="#五、事件委托（事件代理）" class="headerlink" title="五、事件委托（事件代理）"></a>五、事件委托（事件代理）</h4><p>事件委托是利用事件冒泡的性质，事件流开始是从较为具体的元素接收，一直传播上不具体的元素上。</p>
+<p>首先，假如有一个列表 ul，每个列表元素 li 点击会触发事件处理程序，显然，如果一个一个地给元素绑定事件, 效率肯定不好。</p>
+<p>与此同时，当新增一个元素时，事件不见得会绑定成功。一起来看：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">"menu"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"menu-item"</span>&gt;</span>menu-1<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"menu-item"</span>&gt;</span>menu-2<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"menu-item"</span>&gt;</span>menu-3<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"menu-item"</span>&gt;</span>menu-4<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">name</span>=<span class="string">""</span> <span class="attr">id</span>=<span class="string">"addBtn"</span> <span class="attr">value</span>=<span class="string">"添加"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> menu = <span class="built_in">document</span>.getElementById(<span class="string">"menu"</span>);</span></span><br><span class="line"><span class="actionscript">    <span class="keyword">var</span> item = menu.getElementsByClassName(<span class="string">"menu-item"</span>);</span></span><br><span class="line"><span class="actionscript">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; item.length; i++) &#123;</span></span><br><span class="line"><span class="actionscript">      item[i].onclick = (<span class="function"><span class="keyword">function</span><span class="params">(i)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">          <span class="built_in">console</span>.log(i);</span></span><br><span class="line"><span class="undefined">        &#125;;</span></span><br><span class="line"><span class="undefined">      &#125;)(i);</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> addBtnEl = <span class="built_in">document</span>.getElementById(<span class="string">"addBtn"</span>);</span></span><br><span class="line"><span class="actionscript">    addBtnEl.onclick = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">var</span> newEl = <span class="built_in">document</span>.createElement(<span class="string">"li"</span>);</span></span><br><span class="line"><span class="actionscript">      newEl.innerHTML = <span class="string">"menu-new"</span>;</span></span><br><span class="line"><span class="undefined">      menu.appendChild(newEl);</span></span><br><span class="line"><span class="undefined">    &#125;;</span></span><br><span class="line"><span class="undefined">  &#125;;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>新增加的 menu-new，点击发现没有反应，说明事件没有绑定进去，但是我们也并不想，每增加一个新元素，就为这个新元素绑定事件，重复低效率的工作应当避免去做。</p>
+<p>我们通过事件委托的思路来想，事件流的传播，目标元素本身依然会有事件，但同时，冒泡出去后，更高层次的 dom 也能处理事件程序。那么，我们只需要给高层次节点绑定事件，通过判断具体是触发的哪个子节点，再做相应的事件处理。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">"menu"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"menu-item"</span>&gt;</span>menu-1<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"menu-item"</span>&gt;</span>menu-2<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"menu-item"</span>&gt;</span>menu-3<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"menu-item"</span>&gt;</span>menu-4<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">name</span>=<span class="string">""</span> <span class="attr">id</span>=<span class="string">"addBtn"</span> <span class="attr">value</span>=<span class="string">"添加"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> menu = <span class="built_in">document</span>.getElementById(<span class="string">"menu"</span>);</span></span><br><span class="line"><span class="actionscript">    menu.onclick = <span class="function"><span class="keyword">function</span><span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">var</span> e = event || <span class="built_in">window</span>.event;</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> target = e.target || e.srcElement;</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(e);</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">switch</span> (target.textContent) &#123;</span></span><br><span class="line"><span class="actionscript">        <span class="keyword">case</span> <span class="string">"menu-1"</span>:</span></span><br><span class="line"><span class="javascript">          <span class="built_in">console</span>.log(<span class="string">"menu-1 被点击了"</span>);</span></span><br><span class="line"><span class="actionscript">          <span class="keyword">break</span>;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">case</span> <span class="string">"menu-2"</span>:</span></span><br><span class="line"><span class="javascript">          <span class="built_in">console</span>.log(<span class="string">"menu-2 被点击了"</span>);</span></span><br><span class="line"><span class="actionscript">          <span class="keyword">break</span>;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">case</span> <span class="string">"menu-3"</span>:</span></span><br><span class="line"><span class="javascript">          <span class="built_in">console</span>.log(<span class="string">"menu-3 被点击了"</span>);</span></span><br><span class="line"><span class="actionscript">          <span class="keyword">break</span>;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">case</span> <span class="string">"menu-4"</span>:</span></span><br><span class="line"><span class="javascript">          <span class="built_in">console</span>.log(<span class="string">"menu-4 被点击了"</span>);</span></span><br><span class="line"><span class="actionscript">          <span class="keyword">break</span>;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">case</span> <span class="string">"menu-new"</span>:</span></span><br><span class="line"><span class="javascript">          <span class="built_in">console</span>.log(<span class="string">"menu-new 被点击了"</span>);</span></span><br><span class="line"><span class="actionscript">          <span class="keyword">break</span>;</span></span><br><span class="line"><span class="undefined">      &#125;</span></span><br><span class="line"><span class="undefined">    &#125;;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> addBtnEl = <span class="built_in">document</span>.getElementById(<span class="string">"addBtn"</span>);</span></span><br><span class="line"><span class="actionscript">    addBtnEl.onclick = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">var</span> newEl = <span class="built_in">document</span>.createElement(<span class="string">"li"</span>);</span></span><br><span class="line"><span class="actionscript">      newEl.innerHTML = <span class="string">"menu-new"</span>;</span></span><br><span class="line"><span class="undefined">      menu.appendChild(newEl);</span></span><br><span class="line"><span class="undefined">    &#125;;</span></span><br><span class="line"><span class="undefined">  &#125;;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>menu 列表的每个子菜单元素的事件都能正确响应，新增的 menu-new 同样也能正确响应事件。</p>
+<p>事件委托的好处在于，我们不用给每个元素都一一地手动添加绑定事件，避免重复低效的工作。</p>
+<p>其次，事件委托更少得获取 dom, 初始化元素对象和事件函数，能有效减少内存占用。</p>
+<p>每当将事件程序指定给元素时，html 代码和 js 代码之间就建立了一个连接，这种连接越多，网页就执行起来越慢，所以事件委托能有效减少连接树，提高网页性能。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>用户与网页的交互是通过事件进行的，事件模型分为事件冒泡和事件捕获，事件冒泡的兼容性更好，应用更广，同时通过事件冒泡，可以建立事件委托，提升网页性能。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://lamborshea.github.io">南瓜</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://lamborshea.github.io/2018/11/21/JS专题之事件模型/">http://lamborshea.github.io/2018/11/21/JS专题之事件模型/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/js/">js</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/11/11/修改Idea终端Terminal为GitBash或Cmder/">
+        <span class="next-text nav-default">修改Idea终端Terminal为GitBash或Cmder</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:nanbo0810@email.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://github.com/Lamborshea" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+        
+          <a href="/zhihu.com/people/xienanbo" class="iconfont icon-zhihu" title="zhihu"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2015 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">南瓜</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.9.0"></script>
+
+  </body>
+</html>
