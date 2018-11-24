@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="事件循环是 JS 和 Nodejs 事件调用机制的核心，保证了页面可以有序无阻塞的进行。"/>
+
+
+
+
+  <meta name="keywords" content="树洞 前端 博客 自留地" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="种瓜南山下">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.9.0" />
+
+
+
+<link rel="canonical" href="http://lamborshea.github.io/2018/11/24/JS专题之事件循环/"/>
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.9.0" />
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+<script>
+  window.config = {"title":"种瓜南山下","subtitle":"To see the world.","description":"种瓜南山下，南瓜，南瓜的个人博客，前端博客，全栈博客","author":"南瓜","language":"zh-cmn-Hans","timezone":null,"url":"http://lamborshea.github.io","root":"/","permalink":":year/:month/:day/:title/","permalink_defaults":null,"source_dir":"source","public_dir":"public","tag_dir":"tags","archive_dir":"archives","category_dir":"categories","code_dir":"downloads/code","i18n_dir":":lang","skip_render":null,"new_post_name":":title.md","default_layout":"post","titlecase":true,"external_link":true,"filename_case":0,"render_drafts":false,"post_asset_folder":false,"relative_link":false,"future":true,"highlight":{"enable":true,"auto_detect":true,"line_number":true,"tab_replace":null,"first_line_number":"always1"},"default_category":"uncategorized","category_map":null,"tag_map":null,"date_format":"YYYY-MM-DD","time_format":"HH:mm:ss","per_page":20,"pagination_dir":"page","theme":"even","deploy":{"type":"git","repo":{"github":"git@github.com:Lamborshea/lamborshea.github.io.git,master","coding":"git@git.coding.net:nanbo/nanbo.git,master"}},"ignore":[],"keywords":"树洞 前端 博客 自留地","index_generator":{"per_page":20,"order_by":"-date","path":""},"archive_generator":{"per_page":20,"yearly":true,"monthly":true,"daily":false},"baidusitemap":{"path":"baidusitemap.xml"},"category_generator":{"per_page":20},"sitemap":{"path":"sitemap.xml"},"tag_generator":{"per_page":20},"marked":{"gfm":true,"pedantic":false,"sanitize":false,"tables":true,"breaks":true,"smartLists":true,"smartypants":true,"modifyAnchors":"","autolink":true},"server":{"port":4000,"log":false,"ip":"0.0.0.0","compress":false,"header":true},"since":2015,"favicon":"/favicon.ico","rss":"default","menu":{"Home":"/","Archives":"/archives/","Tags":"/tags","Categories":"/categories","About":"/about"},"color":"Default","toc":true,"fancybox":true,"pjax":true,"copyright":{"enable":true,"license":"<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\">知识共享署名-非商业性使用 4.0 国际许可协议</a>"},"reward":{"enable":false,"qrCode":{"wechat":null,"alipay":null}},"social":{"email":"nanbo0810@email.com","stack-overflow":null,"twitter":null,"facebook":null,"linkedin":null,"google":null,"github":"https://github.com/Lamborshea","weibo":null,"zhihu":"zhihu.com/people/xienanbo","douban":null,"pocket":null,"tumblr":null,"instagram":null},"leancloud":{"app_id":null,"app_key":null},"baidu_analytics":null,"baidu_verification":null,"google_analytics":null,"google_verification":null,"disqus_shortname":null,"changyan":{"appid":null,"appkey":null},"livere_datauid":null,"version":"2.9.0"};
+</script>
+
+    <title> JS专题之事件循环 - 种瓜南山下 </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">种瓜南山下</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            标签
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            分类
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            关于
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">种瓜南山下</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              标签
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              分类
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              关于
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JS专题之事件循环
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-11-24
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#准备知识"><span class="toc-text">准备知识</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-进程（process）"><span class="toc-text">1. 进程（process）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-线程（Thread）"><span class="toc-text">2. 线程（Thread）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-栈-stack"><span class="toc-text">3. 栈(stack)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-队列-queue"><span class="toc-text">4. 队列(queue)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-同步和异步-sync-async"><span class="toc-text">5. 同步和异步(sync async)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#6-阻塞和非阻塞-blocking-amp-non-blocking"><span class="toc-text">6. 阻塞和非阻塞(blocking &amp; non-blocking)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#7-执行栈-execution-stack"><span class="toc-text">7. 执行栈(execution stack)</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、为什么-JS-是单线程模型？"><span class="toc-text">二、为什么 JS 是单线程模型？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、事件循环"><span class="toc-text">三、事件循环</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四、宏任务和微任务"><span class="toc-text">四、宏任务和微任务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#五、web-worker"><span class="toc-text">五、web worker</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div>
+
+
+
+    <div class="post-content">
+      
+        <h4 id="准备知识"><a href="#准备知识" class="headerlink" title="准备知识"></a>准备知识</h4><h5 id="1-进程（process）"><a href="#1-进程（process）" class="headerlink" title="1. 进程（process）"></a>1. 进程（process）</h5><p>进程是系统资源分配一个独立单位，一个程序至少有一个进程。比方说：一个工厂代表一个 CPU, 一个车间就是一个进程，任一时刻，只能有一个进程在运行，其他进程处于非运行状态。</p>
+<h5 id="2-线程（Thread）"><a href="#2-线程（Thread）" class="headerlink" title="2. 线程（Thread）"></a>2. 线程（Thread）</h5><p>线程是 CPU 调度和分派的基本单位，一个线程只能属于一个进程，一个进程可以有多个线程且至少有一个。比方说一个车间的工人，可以有多个工人一起工作。</p>
+<p>生活中常常能看到，某某电脑 CPU 的 4 核 4 线程，其意思是指，这款 CPU 同一时间最多只能运行 4 个线程，所以有些线程会处于工作状态，有的线程会处于中断，堵塞，睡眠状态。</p>
+<p>经常看到有很多任务同时在进行，一边工作，一边听歌，还一边下载电影。那是因为这些线程在以闪电般的速度不断的切换主要的几个线程，所以，人的体验上感觉是很多很多任务在同时进行。</p>
+<h5 id="3-栈-stack"><a href="#3-栈-stack" class="headerlink" title="3. 栈(stack)"></a>3. 栈(stack)</h5><p>栈是一种数据结构，具有后进先出的特点，最开始进入栈结构的数据反而最后才能出来。<br><img src="http://qiniu.xienanbo.com/img/20181123223007.png" alt=""></p>
+<h5 id="4-队列-queue"><a href="#4-队列-queue" class="headerlink" title="4. 队列(queue)"></a>4. 队列(queue)</h5><p>队列也是一种数据结构，数据只能从一边进，一边出，先进去的自然就先出来。<br><img src="http://qiniu.xienanbo.com/img/20181124135635.png" alt=""></p>
+<h5 id="5-同步和异步-sync-async"><a href="#5-同步和异步-sync-async" class="headerlink" title="5. 同步和异步(sync async)"></a>5. 同步和异步(sync async)</h5><p>同步和异步关注的消息通信机制，同步在函数调用时，如果调用者没有拿到响应结果，程序会继续等待，知道拿到结果为止。而异步会执行其后的代码，等到有响应结果后，才处理响应。</p>
+<h5 id="6-阻塞和非阻塞-blocking-amp-non-blocking"><a href="#6-阻塞和非阻塞-blocking-amp-non-blocking" class="headerlink" title="6. 阻塞和非阻塞(blocking &amp; non-blocking)"></a>6. 阻塞和非阻塞(blocking &amp; non-blocking)</h5><p>阻塞和非阻塞关注的是程序等待调用结果时的状态，阻塞的意思是，在调用结果返回响应前，线程会被挂起占用，程序无法继续往下走，而非阻塞的线程则不会挂起，后面的代码能够继续往下执行。</p>
+<p>比方说：我去超市买包薯片，老板告诉我货架上没货了，马上去库房拿，这过程中，老板要我站着等他，直到他拿到货出来给我。这个过程就是阻塞。</p>
+<p>如果老板告诉我，可以先回去，他一会去库房拿，拿到了之后打电话给我。这个过程，就是非阻塞的，我不用等待，还可以干其他的事情。</p>
+<h5 id="7-执行栈-execution-stack"><a href="#7-执行栈-execution-stack" class="headerlink" title="7. 执行栈(execution stack)"></a>7. 执行栈(execution stack)</h5><p>js 代码在执行代码时，JS 会给调用代码生成一个执行上下文对象，并将其压入执行上下文栈，首先进入栈底的是全局上下文，然后是函数的执行上下文（Execution Context），函数执行完之后，函数上下文从栈中弹出，直到退出浏览器，全局上下文才从栈底弹出。</p>
+<p>用代码举个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> globalName = <span class="string">"window"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> foo1 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"foo1"</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> foo2 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"foo2"</span>);</span><br><span class="line">  foo1();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">foo2();</span><br></pre></td></tr></table></figure>
+<p><img src="http://qiniu.xienanbo.com/img/20181124144518.png" alt=""></p>
+<p>上面的图片大致能够描述执行上下文栈的实现逻辑，有关执行上下文的知识，大家可以翻看我之前的文章 - 《JavaScript 之执行上下文》</p>
+<h4 id="二、为什么-JS-是单线程模型？"><a href="#二、为什么-JS-是单线程模型？" class="headerlink" title="二、为什么 JS 是单线程模型？"></a>二、为什么 JS 是单线程模型？</h4><blockquote>
+<p>JavaScript 的一个非常有趣的特性是事件循环模型，与许多其他语言不同，它永不阻塞。 处理 I/O 通常通过事件和回调来执行 – MDN</p>
+</blockquote>
+<p>浏览器主要任务是给用户是视觉和交互上的体验，如果页面使用过程中，偶尔出现阻塞、挂起、无响应的体验一定是非常糟糕的。同时，如果采用多线程同步的模型，那么如何保证同一时间修改了 DOM, 到底是哪个线程先生效呢。</p>
+<p>浏览器执行环境的核心思想在于任务调度方式的特别：</p>
+<blockquote>
+<p>哪个任务的优先级高，先来就先运行，直到执行完了才执行下一个，并且同一时刻只能执行一个代码片段，即所谓的单线程模型。</p>
+</blockquote>
+<p>比方说，银行的柜台只开启了一个柜台，每个人想要办理业务，就得先拿号排队，叫到了你的号码，你才能上去办理业务。不能多个人同时在一个柜台办理业务，不然就很容易出差错。</p>
+<h4 id="三、事件循环"><a href="#三、事件循环" class="headerlink" title="三、事件循环"></a>三、事件循环</h4><p>事件循环是 JS 处理各种事件的核心，由于多个线程同时操作 DOM， 造成不可控的问题，所以 JS 采用了单线程模型。另外，由于所有的事件同步执行，执行完一个才能执行下一个，会造成页面渲染的堵塞。JS 中存在异步事件，用户可以在点击页面的时候，请求网络响应的同事，还可以进行其他的点击操作，保证了页面不会因为网络请求，多种 IO 接口响应慢造成代码执行的堵塞和挂起。</p>
+<p>事件循环的顺序是：</p>
+<ol>
+<li>进入 script 标签，创建全局上下文</li>
+<li>执行全局上下文中的函数，将其压入执行调用栈</li>
+<li>某个函数执行完后，函数弹出执行栈，清空函数上下文中的变量对象和内存空间，判断是否需要更新渲染，如果需要则更新渲染。</li>
+<li>如果遇到异步事件，也会压入执行调用栈，但浏览器识别到它是异步事件后，会将其弹出执行栈，然后将异步事件的回调函数放入事件队列中。</li>
+<li>执行直到函数调用栈清空只剩全局执行上下文，这时，JS 会检查事件队列中是否有事件，如果有，则将事件队列中的<code>一个</code>事件出队，然后压入执行栈中执行。</li>
+<li>当执行栈又清空只剩全局执行上下文时，又会重复第 5 步。这就是 JS 的事件循环。</li>
+<li>当用户关闭浏览器，全局执行上下文弹出执行栈，清空相应上下文中的变量对象和内存空间。</li>
+</ol>
+<p><img src="http://qiniu.xienanbo.com/img/20181124142142.png" alt=""></p>
+<p>接下来我们用代码来解释：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">"script start!"</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"foo1"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo1();</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"setTimeout!"</span>);</span><br><span class="line">&#125;, <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"foo2"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo2();</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"script end!"</span>);</span><br><span class="line"></span><br><span class="line">打印：</span><br><span class="line"><span class="comment">// script start!</span></span><br><span class="line"><span class="comment">// foo1</span></span><br><span class="line"><span class="comment">// foo2</span></span><br><span class="line"><span class="comment">// script end!</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// setTimeout!</span></span><br></pre></td></tr></table></figure>
+<p>那我们尝试把 setTimeout 的延迟时间改为 0，想要立即执行，看会不会立即执行：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">"script start!"</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"foo1"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo1();</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"setTimeout!"</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"foo2"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo2();</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"script end!"</span>);</span><br><span class="line"></span><br><span class="line">打印：</span><br><span class="line"><span class="comment">// script start!</span></span><br><span class="line"><span class="comment">// foo1</span></span><br><span class="line"><span class="comment">// foo2</span></span><br><span class="line"><span class="comment">// script end!</span></span><br><span class="line"><span class="comment">// setTimeout!</span></span><br></pre></td></tr></table></figure>
+<p>可以看出 setTimeout 属于异步事件，总是会在主线程的任务执行完后才开始执行。</p>
+<p>顺便说一下事件循环几个原则：</p>
+<blockquote>
+<ol>
+<li>一次只处理一个任务</li>
+<li>一个任务从开始到完成，不会被其他任务所中断</li>
+</ol>
+</blockquote>
+<p>这两个原则保证了浏览器任务单元的完整性，事件调用的有序性。</p>
+<h4 id="四、宏任务和微任务"><a href="#四、宏任务和微任务" class="headerlink" title="四、宏任务和微任务"></a>四、宏任务和微任务</h4><p>事件循环的实现本来应该由一个用于宏任务的队列和一个用于微任务的队列进行完成，这使得事件循环要根据任务类型来进行优先处理。</p>
+<p><strong>宏任务：</strong><br>宏任务包括：</p>
+<ol>
+<li>创建文档对象、解析 HTML、执行主线程代码（script）</li>
+<li>执行各种事件：页面加载、输入、点击</li>
+<li>setTimout，setInterval 异步事件</li>
+</ol>
+<p>宏任务代表一个个离散、独立的工作单元，运行完任务后，浏览器可以进行其他的任务调度，如更新渲染或执行垃圾回收。宏任务需要多次事件循环才能执行完。</p>
+<p><strong>微任务：</strong><br>微任务包括：</p>
+<ol>
+<li>Promise 回调函数</li>
+<li>new MutaionObserver()</li>
+</ol>
+<p>微任务是更小的任务，微任务需要尽可能地、通过异步方式执行，微任务更新浏览器的状态，但必须在浏览器执行其他任务之前执行。微任务使得我们避免不必要的 UI 重绘。微任务在一次事件循环中必须全部执行完。</p>
+<p>宏任务和微任务的执行优先级原则是：</p>
+<blockquote>
+<p>完成一个宏任务后，执行余下的微任务</p>
+</blockquote>
+<blockquote>
+<p>同一次事件循环中，宏任务永远在微任务之前执行。</p>
+</blockquote>
+<p><img src="http://qiniu.xienanbo.com/img/20181124174149.png" alt=""></p>
+<p>ok，知道了优先级原则后，我们来看一段代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="number">3</span>);</span><br><span class="line">        resolve(<span class="number">4</span>);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="number">5</span>);</span><br><span class="line">    &#125;).then(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(data);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">6</span>);</span><br><span class="line">    resolve(<span class="number">7</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">8</span>);</span><br><span class="line">&#125;).then(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(data);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">9</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">output:</span><br><span class="line">第一次循环：</span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="comment">// 6</span></span><br><span class="line"><span class="comment">// 8</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"><span class="comment">// 7</span></span><br><span class="line"></span><br><span class="line">第二次循环：</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="comment">// 5</span></span><br><span class="line"><span class="comment">// 4</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">第三次循环</span><br><span class="line"><span class="comment">// 9</span></span><br></pre></td></tr></table></figure>
+<p>我们一起来分析以上代码：</p>
+<ol>
+<li>进入第一次事件循环，script 这个宏任务，输出 1</li>
+<li>第一个 setTimeout 函数本身是函数调用，属于任务源，setTimeout 的回调函数，即第一个参数，才是被分发的任务，任务被加入宏任务队列，第二次循环时调用。</li>
+<li>Promise 属于微任务，但是 Promise 初始化中代码会立即进行。所以会立即输出 6 和 8；</li>
+<li>Promise 初始化后的回调放入微任务队列</li>
+<li>第二个 setTimeout 也属于宏任务源，回调函数的任务放入宏任务队列，第三次事件循环时调用</li>
+<li>继续调用栈，输出 10， 没毛病</li>
+<li>第一次事件循环的宏任务执行完毕，执行余下的所有微任务，所以输出 7，</li>
+<li>第二次事件循环，发现有宏任务，即第一个 setTimeout 的回调，输出 2，调用 Promise 构建函数的调用栈，直接执行，所以输出 3 和 5</li>
+<li>第一个 setTimeout 的 promise 回调放入微任务队列。</li>
+<li>第二次事件循环的宏任务调用执行完，执行刚才前一步 Promise 创建的微任务，输出 4，第二次循环执行完毕。</li>
+<li>进入第 3 次事件循环，只有一个宏任务，即第二个 SetTimeout，所以输出 9；</li>
+</ol>
+<p><img src="http://qiniu.xienanbo.com/img/20181124185617.png" alt=""></p>
+<p>关于事件循环宏任务和微任务的执行过程：</p>
+<blockquote>
+<ol>
+<li>首先两个类型的任务都是逐个执行</li>
+<li>微任务会前下一个渲染或垃圾回收前全部执行完</li>
+<li>一次事件循环中先只执行一个宏任务，在下一次事件循环前执行完所有的微任务，包括新创建的微任务。</li>
+</ol>
+</blockquote>
+<h4 id="五、web-worker"><a href="#五、web-worker" class="headerlink" title="五、web worker"></a>五、web worker</h4><p>尽管 HTML5 新标准加入了 web worker 的多线程技术，但是 web worker 只能用于计算，并且 JS 的多线程 worker 无法操作 DOM, 不然就无法控制页面是在被谁操作的了。</p>
+<p>主线程传给子线程的数据是通过拷贝复制，同样子线程传给主线程的数据也是通过拷贝复制，而不是共享同一个内存空间。</p>
+<p>以上说明，JS 不存在线程同步，所以还是可以把 JS 看做单线程模型，把 web worker 当做 JS 的一种回调机制。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>事件循环是 JS 和 Nodejs 事件调用机制的核心，保证了页面可以有序无阻塞的进行。</p>
+<p>事件循环的主要逻辑是先执行调用栈，直到清空调用栈只剩下全局上下文。</p>
+<p>然后 JS 检查宏任务队列，如果有任务则取出一个进行调用，进行页面渲染和垃圾回收。</p>
+<p>同时将所有的微任务源派发的任务加入微任务事件队列，最后执行余下的所有微任务。微任务执行后完，进行页面渲染和垃圾回收后进行下一轮事件循环。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://lamborshea.github.io">南瓜</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://lamborshea.github.io/2018/11/24/JS专题之事件循环/">http://lamborshea.github.io/2018/11/24/JS专题之事件循环/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/js/">js</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/11/21/JS专题之事件模型/">
+        <span class="next-text nav-default">JS专题之事件模型</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:nanbo0810@email.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://github.com/Lamborshea" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+        
+          <a href="/zhihu.com/people/xienanbo" class="iconfont icon-zhihu" title="zhihu"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2015 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">南瓜</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.9.0"></script>
+
+  </body>
+</html>
