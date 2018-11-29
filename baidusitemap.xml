@@ -4,6 +4,23 @@
 
     
   <url>
+    <loc>http://lamborshea.github.io/2018/10/18/JavaScript%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/</loc>
+    <lastmod>2018-11-29T10:51:58.447Z</lastmod>
+    <data>
+        <display>
+        <title>JavaScript原型与原型链</title>
+        <pubTime>2018-10-18T04:58:12.000Z</pubTime>
+        
+        <tag>js</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://lamborshea.github.io/2018/11/24/JS%E4%B8%93%E9%A2%98%E4%B9%8B%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/</loc>
     <lastmod>2018-11-24T11:18:38.781Z</lastmod>
     <data>
@@ -215,23 +232,6 @@
         <display>
         <title>JavaScript之作用域链</title>
         <pubTime>2018-10-18T15:31:19.000Z</pubTime>
-        
-        <tag>js</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://lamborshea.github.io/2018/10/18/JavaScript%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/</loc>
-    <lastmod>2018-10-18T04:58:54.267Z</lastmod>
-    <data>
-        <display>
-        <title>JavaScript原型与原型链</title>
-        <pubTime>2018-10-18T04:58:12.000Z</pubTime>
         
         <tag>js</tag>
          
