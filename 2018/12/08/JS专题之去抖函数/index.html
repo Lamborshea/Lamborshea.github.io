@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="去抖函数的意义在于合并多次事件触发为一次事件处理，从而降低事件处理函数可能引发的大量重绘重排，http 请求，内存占用和页面卡顿。"/>
+
+
+
+
+  <meta name="keywords" content="树洞 前端 博客 自留地" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="种瓜南山下">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.9.0" />
+
+
+
+<link rel="canonical" href="http://lamborshea.github.io/2018/12/08/JS专题之去抖函数/"/>
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.9.0" />
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+<script>
+  window.config = {"title":"种瓜南山下","subtitle":"To see the world.","description":"种瓜南山下，南瓜，南瓜的个人博客，前端博客，全栈博客","author":"南瓜","language":"zh-cmn-Hans","timezone":null,"url":"http://lamborshea.github.io","root":"/","permalink":":year/:month/:day/:title/","permalink_defaults":null,"source_dir":"source","public_dir":"public","tag_dir":"tags","archive_dir":"archives","category_dir":"categories","code_dir":"downloads/code","i18n_dir":":lang","skip_render":null,"new_post_name":":title.md","default_layout":"post","titlecase":true,"external_link":true,"filename_case":0,"render_drafts":false,"post_asset_folder":false,"relative_link":false,"future":true,"highlight":{"enable":true,"auto_detect":true,"line_number":true,"tab_replace":null,"first_line_number":"always1"},"default_category":"uncategorized","category_map":null,"tag_map":null,"date_format":"YYYY-MM-DD","time_format":"HH:mm:ss","per_page":20,"pagination_dir":"page","theme":"even","deploy":{"type":"git","repo":{"github":"git@github.com:Lamborshea/lamborshea.github.io.git,master","coding":"git@git.coding.net:nanbo/nanbo.git,master"}},"ignore":[],"keywords":"树洞 前端 博客 自留地","index_generator":{"per_page":20,"order_by":"-date","path":""},"archive_generator":{"per_page":20,"yearly":true,"monthly":true,"daily":false},"baidusitemap":{"path":"baidusitemap.xml"},"category_generator":{"per_page":20},"tag_generator":{"per_page":20},"sitemap":{"path":"sitemap.xml"},"marked":{"gfm":true,"pedantic":false,"sanitize":false,"tables":true,"breaks":true,"smartLists":true,"smartypants":true,"modifyAnchors":"","autolink":true},"server":{"port":4000,"log":false,"ip":"0.0.0.0","compress":false,"header":true},"since":2015,"favicon":"/favicon.ico","rss":"default","menu":{"Home":"/","Archives":"/archives/","Tags":"/tags","Categories":"/categories","About":"/about"},"color":"Default","toc":true,"fancybox":true,"pjax":true,"copyright":{"enable":true,"license":"<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\">知识共享署名-非商业性使用 4.0 国际许可协议</a>"},"reward":{"enable":false,"qrCode":{"wechat":null,"alipay":null}},"social":{"email":"nanbo0810@email.com","stack-overflow":null,"twitter":null,"facebook":null,"linkedin":null,"google":null,"github":"https://github.com/Lamborshea","weibo":null,"zhihu":"zhihu.com/people/xienanbo","douban":null,"pocket":null,"tumblr":null,"instagram":null},"leancloud":{"app_id":null,"app_key":null},"baidu_analytics":null,"baidu_verification":null,"google_analytics":null,"google_verification":null,"disqus_shortname":null,"changyan":{"appid":null,"appkey":null},"livere_datauid":null,"version":"2.9.0"};
+</script>
+
+    <title> JS专题之去抖函数 - 种瓜南山下 </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">种瓜南山下</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            标签
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            分类
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            关于
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">种瓜南山下</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              标签
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              分类
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              关于
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JS专题之去抖函数
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-12-08
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#一、前言"><span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、简单版去抖（debounce）"><span class="toc-text">二、简单版去抖（debounce）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、立即执行"><span class="toc-text">三、立即执行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#取消函数"><span class="toc-text">取消函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div>
+
+
+
+    <div class="post-content">
+      
+        <h4 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h4><p><strong>为什么会有去抖和节流这类工具函数？</strong></p>
+<p>在用户和前端页面的交互过程中，很多操作的触发频率非常高，比如鼠标移动 mousemove 事件, 滚动条滑动 scroll 事件, 输入框 input 事件, 键盘 keyup 事件，浏览器窗口 resize 事件。</p>
+<p>在以上事件上绑定回调函数，如果回调函数是一些需要大量计算、消耗内存、HTTP 请求、DOM 操作等，那么应用的性能和体验就会非常的差。</p>
+<p>去抖和节流函数的根据思想就是，减少高频率事件处理函数 handler 的执行频率（注意是事件处理函数，不是事件回调函数），将多次事件的回调合并成一个回调来执行，从而优化性能。</p>
+<h4 id="二、简单版去抖（debounce）"><a href="#二、简单版去抖（debounce）" class="headerlink" title="二、简单版去抖（debounce）"></a>二、简单版去抖（debounce）</h4><p>去抖(debounce)，也叫防抖，那抖动指的是什么呢？抖动意味着操作的不稳定性，你可以理解成躁动症，安静不下来~防抖的含义便是为了防止抖动造成的结果不准确，等到稳定的时候再处理结果。</p>
+<p>比如在输入事件，鼠标移动，滚动条滑动，键盘敲击事件中，等到停止事件触发，频率稳定为零后，才开始执行回调函数，也就是所谓的没有抖动后处理。</p>
+<blockquote>
+<p>个人总结：去抖，就是事件触发频率稳定后，才开始执行回调函数, 一连串的事件触发，但只进行一次事件处理。</p>
+</blockquote>
+<p>频率就是单位时间触发的次数，如果单位时间内，事件触发超过一次，就只执行最后一次，如果单位时间内没有触发超过一次，那就正常执行。去抖分为延迟执行和立即执行两种思路。</p>
+<p><strong>看一个简单版的去抖函数延迟执行实现：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>输入框： <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"exampleInput"</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> inputEl = <span class="built_in">document</span>.getElementById(<span class="string">"exampleInput"</span>);</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">    inputEl.oninput = debounce(ajax); <span class="comment">// debouce 函数执行了，返回一个函数，该函数为事件的回调函数</span></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">    <span class="comment">// 事件真正的处理函数（handler）,参数是回调函数传递过来的。</span></span></span><br><span class="line"><span class="actionscript">    <span class="comment">// 常见场景就是边输入查询关键字，边请求查询数据，比如百度的首页搜索</span></span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">ajax</span><span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="string">"HTTP 异步请求："</span>, event.target.value);</span></span><br><span class="line"><span class="actionscript">      <span class="comment">// $.ajax() 请求数据 ...</span></span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">debounce</span><span class="params">(func, delay)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">      <span class="comment">// 参数为传入的事件处理函数和间隔时间</span></span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> interval = delay || <span class="number">1000</span>;</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> timer = <span class="literal">null</span>; <span class="comment">// 闭包保存的 timer 变量，会常驻内存</span></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">      <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">(args)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 返回的匿名函数是事件的回调函数，在事件触发时执行，参数为 DOM 事件对象(event)</span></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">var</span> context = <span class="keyword">this</span>; <span class="comment">// 事件的回调函数中，this 指向事件的绑定的 DOM 元素对象(HTMLElement)</span></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">        <span class="built_in">console</span>.log(timer);</span></span><br><span class="line"><span class="actionscript">        clearTimeout(timer); <span class="comment">// 如果事件回调函数中存在定时器，则清空上次定时器，重新计时。如果间隔时间到后，处理函数自然就被执行了。</span></span></span><br><span class="line"><span class="actionscript">        timer = setTimeout(<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">          func.call(context, args); <span class="comment">// 定时器时间到后，执行事件真正的处理函数 handler</span></span></span><br><span class="line"><span class="actionscript">          <span class="comment">// 执行的事件处理函数（handler），需要把调用对象 this 和事件对象 传递过去，就像没被debounce处理过一样</span></span></span><br><span class="line"><span class="undefined">        &#125;, interval);</span></span><br><span class="line"><span class="undefined">      &#125;;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">  &#125;;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://qiniu.xienanbo.com/2018-12-05%2008.24.39-debounce.gif" alt=""></p>
+<p>上面代码中我的注释已经能够说明整个去抖的过程，再来啰嗦几句话~</p>
+<ol>
+<li>debounce 函数在主线程顺序执行时已经被调用，传入的参数一个是真正想在事件触发执行的事件处理函数</li>
+<li>另一个参数是事件触发的间隔时间，间隔时间内再次触发事件，则重新计时，类似于罚你 5 分钟内不准说话，时间到后就可以开始说话，如果 5 分钟内说话了，则再罚你 5 分钟内不准说话，以此类推~</li>
+<li>debounce 函数有一个 timer 内部变量，timer 在返回的执行函数中被访问，形成了闭包，有关闭包的内容，可以翻看我之前的文章《JavaScript 之闭包》</li>
+<li>bebounce 函数返回的匿名函数才是 input 事件的回调函数，所以该匿名函数有一个默认参数 event 对象。</li>
+<li>同第 4 点，匿名函数是 dom 元素注册事件的回调函数，所以匿名函数（回调函数）的 this 指向 HTMLInput 元素。</li>
+<li>同第 2 点，触发函数后，如果发现闭包中保存着 timer 变量, timer 变量初始值为 null, 之后触发定时器后，timer 为当次定时器的 id，id 是一个数字。去抖的过程在于，如果在定时器的间隔时间内触发了函数，它会把上一次事件触发时定义的定时器清除，又重新定义一个定时器。如果本次定时器没有被清除，时间到后就会自然执行事件处理函数。对这个过程有困惑的同学，可以把 timer 变量在 clearTimeout 之前打印出来就明白了。</li>
+<li>延时执行了事件处理函数（handler），需要传递调用对象和事件对象过去，此处 call 可以和 apply 互换，如果用 apply, 传递 arguments 类数组即可。这样保证了参数的一致性，就像没被 debounce 处理过一样。</li>
+</ol>
+<p>以上就是去抖函数的基本思想, 可以参考示意图<br><img src="http://qiniu.xienanbo.com/img/20181205083220.png" alt=""></p>
+<p>下面这张图是高设 3 里讲的节流函数，其实是这一节所说的去抖函数，高设 3 将 timer 变量用传入的处理函数的属性代替了而已。<br><img src="http://qiniu.xienanbo.com/img/20181208014634.png" alt=""></p>
+<h4 id="三、立即执行"><a href="#三、立即执行" class="headerlink" title="三、立即执行"></a>三、立即执行</h4><p>第二节的简单版去抖函数能满足大部分只需要触发一次事件处理的去抖场景：输入数据查询事件，下拉滚动条到窗口底部懒加载数据。</p>
+<p>但是有一个问题，假如我想输入框输入内容时，第一个字输完就请数据怎么做？ 你可以理解为，你可以马上开始说话，但是说完话后 5 分钟不能说话，如果 5 分钟内说话，则接下来再加 5 分钟不能说话。如果 5 分钟后没说话， 那么接下来，你又可以先说话，然后闭嘴 5 分钟~</p>
+<p>所以，引出来了立即执行版的去抖函数。</p>
+<p><strong>取消功能实现</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>输入框： <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"exampleInput"</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> inputEl = <span class="built_in">document</span>.getElementById(<span class="string">"exampleInput"</span>);</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">    inputEl.oninput = debounce(ajax, <span class="number">1000</span>, <span class="literal">true</span>); <span class="comment">// debouce 函数执行了，返回一个函数，该函数为事件的回调函数</span></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">    <span class="comment">// 事件真正的处理函数（handler）,参数是回调函数传递过来的。</span></span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">ajax</span><span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="string">"HTTP 异步请求："</span>, event.target.value);</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">debounce</span><span class="params">(func, delay, immediate)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> interval = delay || <span class="number">1000</span>;</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> timer = <span class="literal">null</span>; <span class="comment">// 定时器的初始值为 null, 所以第一次触发事件会立即执行，整个过程中 timer 充当了 flag 的作用，判断能否立即执行（第一次或者上一次立即执行后超过了间隔时间）</span></span></span><br><span class="line"><span class="actionscript">      <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">(args)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        <span class="keyword">var</span> context = <span class="keyword">this</span>; <span class="comment">// 事件的回调函数中，this 指向事件的绑定的 DOM 元素对象(HTMLElement)</span></span></span><br><span class="line"><span class="javascript">        <span class="built_in">console</span>.log(timer);</span></span><br><span class="line"><span class="actionscript">        clearTimeout(timer); <span class="comment">// 每次有新事件触发，都会清除之前的定时器，如果可以立即执行则执行，如果不可以立即执行则重新创建定时器。</span></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">if</span> (immediate) &#123;</span></span><br><span class="line"><span class="actionscript">          <span class="comment">// 如果上一次的 timer 不为 null, 说明自上一次事件触发并且立即执行处理函数后，间隔时间还未结束。所以 timer 本应为数字 id，不为 null！</span></span></span><br><span class="line"><span class="undefined">          callNow = !timer;</span></span><br><span class="line"><span class="actionscript">          timer = setTimeout(<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">            timer = <span class="literal">null</span>; <span class="comment">// 每次事件触发，并在定时器时间超过后， 把定时器变量设置 null, 从而可以判断出下一次是否能够立即执行。</span></span></span><br><span class="line"><span class="undefined">          &#125;, interval);</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">          <span class="keyword">if</span> (callNow) &#123;</span></span><br><span class="line"><span class="undefined">            func.call(context, args);</span></span><br><span class="line"><span class="undefined">          &#125;</span></span><br><span class="line"><span class="actionscript">        &#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="actionscript">          timer = setTimeout(<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">            func.call(context, args); <span class="comment">// 定时器时间到后，执行事件真正的处理函数 handler</span></span></span><br><span class="line"><span class="undefined">          &#125;, interval);</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">      &#125;;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">  &#125;;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码的注释，可以解释整个流程，下面大致说一下：</p>
+<ol>
+<li>非立即执行版本和前一节内容一样，跳过。</li>
+<li>timer 初始值为 null, 第一次触发为立即执行，!timer 为 true, 所以能够立即调用事件处理函数。</li>
+<li>每次事件触发， 都会把 timer 重新赋值，在间隔时间到之前 timer 为数字 id, !timer 为 false, 所以不能立即执行。如果间隔时间到了，会把当次事件触发的定时器 id 置为 null, 下一次事件触发就能立即执行了。</li>
+<li>朋友们可以通过观察 timer 值的变化，思考整个过程，timer 在去抖的过程中充当 flag 的作用，可以用来判断能否立即执行。</li>
+</ol>
+<p>看看效果：</p>
+<p><img src="http://qiniu.xienanbo.com/2018-12-08%2002.50.52.gif" alt=""></p>
+<h4 id="取消函数"><a href="#取消函数" class="headerlink" title="取消函数"></a>取消函数</h4><p>假如去抖函数的间隔时间为 5 秒钟，我在这 5 秒钟内又想立即执行可以怎么做？于是我们给回调函数加个取消函数属性。</p>
+<p>函数也是一个对象，可以像其他一般对象那样添加方法：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  输入框： <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"exampleInput"</span> /&gt;</span><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"cancelBtn"</span>&gt;</span></span><br><span class="line">    取消</span><br><span class="line">  <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> inputEl = <span class="built_in">document</span>.getElementById(<span class="string">"exampleInput"</span>);</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">    <span class="keyword">var</span> debouncedFunc = debounce(ajax, <span class="number">5000</span>, <span class="literal">true</span>); <span class="comment">// 将事件处理函数经过去抖函数处理。</span></span></span><br><span class="line"><span class="actionscript">    inputEl.oninput = debouncedFunc; <span class="comment">// 绑定去抖后的事件回调函数</span></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> cancelBtnEL = <span class="built_in">document</span>.getElementById(<span class="string">"cancelBtn"</span>);</span></span><br><span class="line"><span class="actionscript">    cancelBtnEL.onclick = debouncedFunc.cancel; <span class="comment">// 绑定回调函数的属性 cancel 方法，点击页面，重置去抖效果</span></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">ajax</span><span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="string">"HTTP 异步请求："</span>, event.target.value);</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">debounce</span><span class="params">(func, delay, immediate)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> interval = delay || <span class="number">5000</span>;</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> timer = <span class="literal">null</span>;</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> revokeFunc = <span class="function"><span class="keyword">function</span><span class="params">(args)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        <span class="keyword">var</span> context = <span class="keyword">this</span>;</span></span><br><span class="line"><span class="undefined">        clearTimeout(timer);</span></span><br><span class="line"><span class="actionscript">        <span class="keyword">if</span> (immediate) &#123;</span></span><br><span class="line"><span class="undefined">          callNow = !timer;</span></span><br><span class="line"><span class="actionscript">          timer = setTimeout(<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">            timer = <span class="literal">null</span>;</span></span><br><span class="line"><span class="undefined">          &#125;, interval);</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">          <span class="keyword">if</span> (callNow) &#123;</span></span><br><span class="line"><span class="undefined">            func.call(context, args);</span></span><br><span class="line"><span class="undefined">          &#125;</span></span><br><span class="line"><span class="actionscript">        &#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="actionscript">          timer = setTimeout(<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="undefined">            func.call(context, args);</span></span><br><span class="line"><span class="undefined">          &#125;, interval);</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">      &#125;;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">      revokeFunc.cancel = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        clearTimeout(timer); <span class="comment">// 清空上一次事件触发的定时器</span></span></span><br><span class="line"><span class="actionscript">        timer = <span class="literal">null</span>; <span class="comment">// 重置 timer 为 null, 从而下一次事件触发就能立即执行。</span></span></span><br><span class="line"><span class="undefined">      &#125;;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="actionscript">      <span class="keyword">return</span> revokeFunc;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">  &#125;;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>看看效果：<br><img src="http://qiniu.xienanbo.com/2018-12-08%2003.23.12.gif" alt=""></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>去抖函数的意义在于合并多次事件触发为一次事件处理，从而降低事件处理函数可能引发的大量重绘重排，http 请求，内存占用和页面卡顿。</p>
+<p>另外，本文有关 this, call, apply，闭包的知识，可以翻看我之前分享的文章。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://lamborshea.github.io">南瓜</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://lamborshea.github.io/2018/12/08/JS专题之去抖函数/">http://lamborshea.github.io/2018/12/08/JS专题之去抖函数/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/js/">js</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/11/24/JS专题之事件循环/">
+        <span class="next-text nav-default">JS专题之事件循环</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:nanbo0810@email.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://github.com/Lamborshea" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+        
+          <a href="/zhihu.com/people/xienanbo" class="iconfont icon-zhihu" title="zhihu"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2015 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">南瓜</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.9.0"></script>
+
+  </body>
+</html>
