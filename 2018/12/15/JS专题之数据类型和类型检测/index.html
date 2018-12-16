@@ -17,7 +17,7 @@
 
 
 
-  <meta name="description" content="JS专题之数据类型和类型检测"/>
+  <meta name="description" content="js 是动态语言，数据类型的检查是在运行时执行，为了避免代码莫名其妙报错，所以做好数据类型的检测很有必要。"/>
 
 
 
@@ -86,7 +86,7 @@
 
 
 <script>
-  window.config = {"title":"种瓜南山下","subtitle":"To see the world.","description":"种瓜南山下，南瓜，南瓜的个人博客，前端博客，全栈博客","author":"南瓜","language":"zh-cmn-Hans","timezone":null,"url":"http://lamborshea.github.io","root":"/","permalink":":year/:month/:day/:title/","permalink_defaults":null,"source_dir":"source","public_dir":"public","tag_dir":"tags","archive_dir":"archives","category_dir":"categories","code_dir":"downloads/code","i18n_dir":":lang","skip_render":null,"new_post_name":":title.md","default_layout":"post","titlecase":true,"external_link":true,"filename_case":0,"render_drafts":false,"post_asset_folder":false,"relative_link":false,"future":true,"highlight":{"enable":true,"auto_detect":true,"line_number":true,"tab_replace":null,"first_line_number":"always1"},"default_category":"uncategorized","category_map":null,"tag_map":null,"date_format":"YYYY-MM-DD","time_format":"HH:mm:ss","per_page":20,"pagination_dir":"page","theme":"even","deploy":{"type":"git","repo":{"github":"git@github.com:Lamborshea/lamborshea.github.io.git,master","coding":"git@git.coding.net:nanbo/nanbo.git,master"}},"ignore":[],"keywords":"树洞 前端 博客 自留地","index_generator":{"per_page":20,"order_by":"-date","path":""},"baidusitemap":{"path":"baidusitemap.xml"},"category_generator":{"per_page":20},"sitemap":{"path":"sitemap.xml"},"tag_generator":{"per_page":20},"marked":{"gfm":true,"pedantic":false,"sanitize":false,"tables":true,"breaks":true,"smartLists":true,"smartypants":true,"modifyAnchors":"","autolink":true},"server":{"port":4000,"log":false,"ip":"0.0.0.0","compress":false,"header":true},"archive_generator":{"per_page":20,"yearly":true,"monthly":true,"daily":false},"since":2015,"favicon":"/favicon.ico","rss":"default","menu":{"Home":"/","Archives":"/archives/","Tags":"/tags","Categories":"/categories","About":"/about"},"color":"Default","toc":true,"fancybox":true,"pjax":true,"copyright":{"enable":true,"license":"<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\">知识共享署名-非商业性使用 4.0 国际许可协议</a>"},"reward":{"enable":false,"qrCode":{"wechat":null,"alipay":null}},"social":{"email":"nanbo0810@email.com","stack-overflow":null,"twitter":null,"facebook":null,"linkedin":null,"google":null,"github":"https://github.com/Lamborshea","weibo":null,"zhihu":"zhihu.com/people/xienanbo","douban":null,"pocket":null,"tumblr":null,"instagram":null},"leancloud":{"app_id":null,"app_key":null},"baidu_analytics":null,"baidu_verification":null,"google_analytics":null,"google_verification":null,"disqus_shortname":null,"changyan":{"appid":null,"appkey":null},"livere_datauid":null,"version":"2.9.0"};
+  window.config = {"title":"种瓜南山下","subtitle":"To see the world.","description":"种瓜南山下，南瓜，南瓜的个人博客，前端博客，全栈博客","author":"南瓜","language":"zh-cmn-Hans","timezone":null,"url":"http://lamborshea.github.io","root":"/","permalink":":year/:month/:day/:title/","permalink_defaults":null,"source_dir":"source","public_dir":"public","tag_dir":"tags","archive_dir":"archives","category_dir":"categories","code_dir":"downloads/code","i18n_dir":":lang","skip_render":null,"new_post_name":":title.md","default_layout":"post","titlecase":true,"external_link":true,"filename_case":0,"render_drafts":false,"post_asset_folder":false,"relative_link":false,"future":true,"highlight":{"enable":true,"auto_detect":true,"line_number":true,"tab_replace":null,"first_line_number":"always1"},"default_category":"uncategorized","category_map":null,"tag_map":null,"date_format":"YYYY-MM-DD","time_format":"HH:mm:ss","per_page":20,"pagination_dir":"page","theme":"even","deploy":{"type":"git","repo":{"github":"git@github.com:Lamborshea/lamborshea.github.io.git,master","coding":"git@git.coding.net:nanbo/nanbo.git,master"}},"ignore":[],"keywords":"树洞 前端 博客 自留地","index_generator":{"per_page":20,"order_by":"-date","path":""},"archive_generator":{"per_page":20,"yearly":true,"monthly":true,"daily":false},"baidusitemap":{"path":"baidusitemap.xml"},"tag_generator":{"per_page":20},"category_generator":{"per_page":20},"sitemap":{"path":"sitemap.xml"},"marked":{"gfm":true,"pedantic":false,"sanitize":false,"tables":true,"breaks":true,"smartLists":true,"smartypants":true,"modifyAnchors":"","autolink":true},"server":{"port":4000,"log":false,"ip":"0.0.0.0","compress":false,"header":true},"since":2015,"favicon":"/favicon.ico","rss":"default","menu":{"Home":"/","Archives":"/archives/","Tags":"/tags","Categories":"/categories","About":"/about"},"color":"Default","toc":true,"fancybox":true,"pjax":true,"copyright":{"enable":true,"license":"<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\">知识共享署名-非商业性使用 4.0 国际许可协议</a>"},"reward":{"enable":false,"qrCode":{"wechat":null,"alipay":null}},"social":{"email":"nanbo0810@email.com","stack-overflow":null,"twitter":null,"facebook":null,"linkedin":null,"google":null,"github":"https://github.com/Lamborshea","weibo":null,"zhihu":"zhihu.com/people/xienanbo","douban":null,"pocket":null,"tumblr":null,"instagram":null},"leancloud":{"app_id":null,"app_key":null},"baidu_analytics":null,"baidu_verification":null,"google_analytics":null,"google_verification":null,"disqus_shortname":null,"changyan":{"appid":null,"appkey":null},"livere_datauid":null,"version":"2.9.0"};
 </script>
 
     <title> JS专题之数据类型和类型检测 - 种瓜南山下 </title>
@@ -238,11 +238,150 @@
 
     
     
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#数据类型有哪些？"><span class="toc-text">数据类型有哪些？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一、为什么要进行类型检测？"><span class="toc-text">一、为什么要进行类型检测？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、typeof-方式"><span class="toc-text">二、typeof 方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、instanceof-方式"><span class="toc-text">三、instanceof 方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四、toString-方式"><span class="toc-text">四、toString() 方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#五、应用场景"><span class="toc-text">五、应用场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div>
+
 
 
     <div class="post-content">
       
-        
+        <blockquote>
+<p>本文共 1750 字，读完只需 7 分钟</p>
+</blockquote>
+<h4 id="数据类型有哪些？"><a href="#数据类型有哪些？" class="headerlink" title="数据类型有哪些？"></a>数据类型有哪些？</h4><p>ECMAScript 的数据类型分为简单数据类型（也被称为基本数据类型，原始数据类型）：</p>
+<ol>
+<li>Undefined</li>
+<li>Null</li>
+<li>String</li>
+<li>Number</li>
+<li>Boolean</li>
+</ol>
+<p>在 ES6 中新增一个简单数据类型 Symbol，所以简单数据类型总共有 6 个，还有复杂数据类型（也叫作引用数据类型）：Object。</p>
+<p>所有 js 中所有的值最终都将是以上 7 种数据类型之一。</p>
+<p><strong>基本数据类型</strong></p>
+<p>基本数据类型是保存在<code>栈</code>的数据结构中的,是按值访问的，基本数据类型的值不会变 (值本身无法被改变)<br>数据之间进行的是它们<code>值</code>的比较。<br>看代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a, b;</span><br><span class="line">a = <span class="string">"jay_chou"</span>;</span><br><span class="line">b = a;</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">// jay_chou</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// jay_chou</span></span><br><span class="line">a = <span class="string">"coldplay"</span>; <span class="comment">// 改变 a 的值，并不影响 b 的值</span></span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">// coldplay</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// jay_chou</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://qiniu.xienanbo.com/img/20181215141339.png" alt=""></p>
+<p><strong>引用数据类型</strong></p>
+<p>除了基本的数据类型外，剩下的就是引用类型，统称为 Object 类型， 细分的话，有 Object 类型，Array 类型，Date 类型， Regexp 类型，function， Math 类型；</p>
+<p>引用数据类型的特点：</p>
+<ul>
+<li>引用数据类型的值保存的是对象在内存中的地址</li>
+<li>引用数据类型的值是可变的</li>
+<li>引用数据类型的比较是引用的比较</li>
+<li>另外：js 不能直接操作对象的内存空间<br>比方：</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = &#123;</span><br><span class="line">  name: <span class="string">"jay_chou"</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> b = a;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> c = &#123;</span><br><span class="line">  name: <span class="string">"jay_chou"</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">a === b; <span class="comment">// true</span></span><br><span class="line">a === c; <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://qiniu.xienanbo.com/img/20181215152921.png" alt=""></p>
+<h4 id="一、为什么要进行类型检测？"><a href="#一、为什么要进行类型检测？" class="headerlink" title="一、为什么要进行类型检测？"></a>一、为什么要进行类型检测？</h4><p>JavaScript 是动态语言，动态语言和静态语言的区别在于：类型是在编译时检查（静态）还是在运行时检查（动态）。</p>
+<p>基于动态类型的特点，如果不注意进行类型检测，JS 很容易在运行代码发生才发现报错。</p>
+<p>举个列子：<br>函数在定义时，参数可以是任何类型，但是函数在实际运行的时候，传入的实参可能是其他同事函数的返回值，也可能是后台的返回值，假如不符合代码逻辑里要求的数据类型，那么就会报错导致 bug 影响程序运行。</p>
+<p>因此，我们不光要做类型检测，也应该给自己的函数注释好参数类型和返回值类型，还要和后端定义好接口数据类型格式。</p>
+<p>当比较的两个值的类型不同的时候 <code>==</code> 运算符会进行类型转换，但是当两个值的类型相同的时候，即使是 <code>==</code> 也相当于是 <code>===</code>;<code>===</code> 在比较两个值的时候，还会比较值的数据类型。</p>
+<h4 id="二、typeof-方式"><a href="#二、typeof-方式" class="headerlink" title="二、typeof 方式"></a>二、typeof 方式</h4><p>typeof 的返回值总是字符串，字符串的可能值有：</p>
+<ol>
+<li>undefined</li>
+<li>boolean</li>
+<li>number</li>
+<li>string</li>
+<li>symbol</li>
+<li>object</li>
+<li>function</li>
+</ol>
+<p>typeof 其实是一元操作符，和 <code>+ - * /</code> 一样，不是一个函数，进行比较的时候，typeof 后面可以跟<code>（）</code>, 也可以不跟。</p>
+<p><strong>undefined：</strong></p>
+<blockquote>
+<p>typeof undefined; // undefined</p>
+</blockquote>
+<p>很多库因为考虑到 undefined 可能会被意外重写，用 <code>void 0</code> 来判断是否是 undefined。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> isUndefined = <span class="function"><span class="keyword">function</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> obj === <span class="keyword">void</span> <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>MDN 上对 void 词条的说明是：</p>
+<blockquote>
+<p>The void operator evaluates the given expression and then returns undefined.</p>
+</blockquote>
+<p>意思是说 void 运算符能对给定的表达式进行求值，然后返回 undefined。也就是说，void 后面你随便跟上一个表达式，返回的都是 undefined，都能完美代替 undefined。</p>
+<p><strong>string, number, boolean, symbol, function, object ：</strong></p>
+<blockquote>
+<p>typeof “abc”; // string</p>
+</blockquote>
+<blockquote>
+<p>typeof 123; // number</p>
+</blockquote>
+<blockquote>
+<p>typeof NaN; // number</p>
+</blockquote>
+<blockquote>
+<p>typeof true; // boolean</p>
+</blockquote>
+<blockquote>
+<p>typeof Symbol(); // symbol</p>
+</blockquote>
+<blockquote>
+<p>typeof function () {}; // function</p>
+</blockquote>
+<blockquote>
+<p>typeof {}; // object</p>
+</blockquote>
+<p><strong>null</strong></p>
+<blockquote>
+<p>typeof null; // object!！！</p>
+</blockquote>
+<p>js 中，不同的对象在底层都表示为二进制，在 Javascript 中二进制前三位都为 0 的话会被检测为 Object 类型，null 的二进制表示全为 0，自然前三位也是 0，所以执行 typeof 时会返回 “object”。</p>
+<p><strong>Array, Date, Regexp, Math： </strong></p>
+<blockquote>
+<p>typeof []; // object</p>
+</blockquote>
+<p>数组的判断不考虑兼容性的话，可以用 Array.isArray() 方法进行检测。</p>
+<blockquote>
+<p>typeof new Date(); // object</p>
+</blockquote>
+<blockquote>
+<p>typeof /s/g; // object</p>
+</blockquote>
+<blockquote>
+<p>typeof Math; // object</p>
+</blockquote>
+<blockquote>
+<p>typeof new String(“foo”); // object！！！</p>
+</blockquote>
+<blockquote>
+<p>typeof new Number(123); // object！！！</p>
+</blockquote>
+<blockquote>
+<p>typeof new Boolean(true); // object！！！</p>
+</blockquote>
+<blockquote>
+<p>typeof new Function(“”); // function</p>
+</blockquote>
+<blockquote>
+<p>typeof new Error(); // object</p>
+</blockquote>
+<p>基于以上，基本类型大部分都能被准确检测并返回正确的字符串，并不是所有的类型都能被正确检测出来。所以在实际应用中，避免用基本包装类型<code>new Number()</code> 这种方式来初始化数据。</p>
+<h4 id="三、instanceof-方式"><a href="#三、instanceof-方式" class="headerlink" title="三、instanceof 方式"></a>三、instanceof 方式</h4><p>上面说到基本包装类型：new Number(), new Boolean, New String();</p>
+<p>它们用 typeof 判断，会检测成对象。那针对基本包装类型可以用 instanceof 来判断。</p>
+<p>instanceof 运算符可以用来检测某个构造函数的 prototype 属性是否存在于另外一个要检测对象的原型链上。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义构造函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 因为 Object.getPrototypeOf(person1) === Person.prototype</span></span><br><span class="line">person1 <span class="keyword">instanceof</span> Person; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>现在我们检测一下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">"abc"</span>); <span class="comment">// 基本包装类型</span></span><br><span class="line"><span class="keyword">var</span> strValue = <span class="string">"foo"</span>;</span><br><span class="line"></span><br><span class="line">strValue <span class="keyword">instanceof</span> <span class="built_in">String</span>; <span class="comment">// false</span></span><br><span class="line">str <span class="keyword">instanceof</span> <span class="built_in">String</span>; <span class="comment">// true</span></span><br><span class="line">str <span class="keyword">instanceof</span> <span class="built_in">Object</span>; <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// true</span></span><br><span class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Object</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>如果我们修改构造函数的原型后，这个方法也不怎么靠谱了:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">"abc"</span>);</span><br><span class="line">str.__proto__ = <span class="built_in">Object</span>.prototype;</span><br><span class="line">str <span class="keyword">instanceof</span> <span class="built_in">String</span>; <span class="comment">// false !!!</span></span><br><span class="line">str <span class="keyword">instanceof</span> <span class="built_in">Object</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h4 id="四、toString-方式"><a href="#四、toString-方式" class="headerlink" title="四、toString() 方式"></a>四、toString() 方式</h4><p>ECMAScript 的 Boolean 值、数字和字符串的原始值的有趣之处在于它们是伪对象，这意味着它们实际上具有属性和方法。</p>
+<p>ECMAScript 定义所有对象都有 toString() 方法，无论它是伪对象，还是真对象。因为 String 类型属于伪对象，所以它一定有 toString() 方法。</p>
+<p>使用 <code>Object.prototype.toString</code> 方法, 可以获取到变量的准确的数据类型.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="number">1</span>); <span class="comment">// '[object Number]'</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="string">"1"</span>); <span class="comment">// '[object String]'</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">NaN</span>); <span class="comment">// '[object Number]'</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(foo); <span class="comment">// '[object Function]'</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="built_in">Symbol</span>()); <span class="comment">// "[object Symbol]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// '[object Array]'</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">undefined</span>); <span class="comment">// '[object Undefined]'</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">null</span>); <span class="comment">// '[object Null]'</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">true</span>); <span class="comment">// '[object Boolean]'</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="regexp">/^s/g</span>); <span class="comment">// '[object RegExp]'</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="built_in">Math</span>); <span class="comment">// "[object Math]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="keyword">new</span> <span class="built_in">Error</span>()); <span class="comment">// "[object Error]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="keyword">new</span> <span class="built_in">Date</span>()); <span class="comment">// "[object Date]"</span></span><br></pre></td></tr></table></figure>
+<p>toString 就能解决基本包装类型的检测错误和 <code>instanceof</code> 的检测不安全。</p>
+<p>基于 toString 我们可以构造很多工具函数用来检测数据类型，这一块实现的方案很多，本文就按下不表。</p>
+<h4 id="五、应用场景"><a href="#五、应用场景" class="headerlink" title="五、应用场景"></a>五、应用场景</h4><p>js 类型检测常见的应用场景：<br>应用场景：添加默认值</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 方式一</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> b === <span class="string">"undefined"</span>) &#123;</span><br><span class="line">    b = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 方式二：不适用foo(10, false)这种情况</span></span><br><span class="line">  b = b || <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">foo(<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+<p>回调函数调用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params">callback</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//typeof callback === 'function' ? callback() : null;</span></span><br><span class="line">  callback &amp;&amp; callback();</span><br><span class="line">&#125;</span><br><span class="line">fn(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;);</span><br></pre></td></tr></table></figure>
+<p>还有一个很常见的应用场景当然是后台返回数据的类型的检测了。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>js 是动态语言，数据类型的检查是在运行时执行，为了避免代码莫名其妙报错，所以做好数据类型的检测很有必要。</p>
+
       
     </div>
 
@@ -274,6 +413,12 @@
 
     
       <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/js/">js</a>
+            
+          </div>
         
         
         
