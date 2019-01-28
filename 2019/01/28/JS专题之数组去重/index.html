@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="总结归纳数组去重的几种方法"/>
+
+
+
+
+  <meta name="keywords" content="树洞 前端 博客 自留地" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="种瓜南山下">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.9.0" />
+
+
+
+<link rel="canonical" href="http://lamborshea.github.io/2019/01/28/JS专题之数组去重/"/>
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.9.0" />
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+<script>
+  window.config = {"title":"种瓜南山下","subtitle":"To see the world.","description":"种瓜南山下，南瓜，南瓜的个人博客，前端博客，全栈博客","author":"南瓜","language":"zh-cmn-Hans","timezone":null,"url":"http://lamborshea.github.io","root":"/","permalink":":year/:month/:day/:title/","permalink_defaults":null,"source_dir":"source","public_dir":"public","tag_dir":"tags","archive_dir":"archives","category_dir":"categories","code_dir":"downloads/code","i18n_dir":":lang","skip_render":null,"new_post_name":":title.md","default_layout":"post","titlecase":true,"external_link":true,"filename_case":0,"render_drafts":false,"post_asset_folder":false,"relative_link":false,"future":true,"highlight":{"enable":true,"auto_detect":true,"line_number":true,"tab_replace":null,"first_line_number":"always1"},"default_category":"uncategorized","category_map":null,"tag_map":null,"date_format":"YYYY-MM-DD","time_format":"HH:mm:ss","per_page":20,"pagination_dir":"page","theme":"even","deploy":{"type":"git","repo":{"github":"git@github.com:Lamborshea/lamborshea.github.io.git,master","coding":"git@git.coding.net:nanbo/nanbo.git,master"}},"ignore":[],"keywords":"树洞 前端 博客 自留地","index_generator":{"per_page":20,"order_by":"-date","path":""},"baidusitemap":{"path":"baidusitemap.xml"},"archive_generator":{"per_page":20,"yearly":true,"monthly":true,"daily":false},"category_generator":{"per_page":20},"tag_generator":{"per_page":20},"sitemap":{"path":"sitemap.xml"},"marked":{"gfm":true,"pedantic":false,"sanitize":false,"tables":true,"breaks":true,"smartLists":true,"smartypants":true,"modifyAnchors":"","autolink":true},"server":{"port":4000,"log":false,"ip":"0.0.0.0","compress":false,"header":true},"since":2015,"favicon":"/favicon.ico","rss":"default","menu":{"Home":"/","Archives":"/archives/","Tags":"/tags","Categories":"/categories","About":"/about"},"color":"Default","toc":true,"fancybox":true,"pjax":true,"copyright":{"enable":true,"license":"<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\">知识共享署名-非商业性使用 4.0 国际许可协议</a>"},"reward":{"enable":false,"qrCode":{"wechat":null,"alipay":null}},"social":{"email":"nanbo0810@email.com","stack-overflow":null,"twitter":null,"facebook":null,"linkedin":null,"google":null,"github":"https://github.com/Lamborshea","weibo":null,"zhihu":"zhihu.com/people/xienanbo","douban":null,"pocket":null,"tumblr":null,"instagram":null},"leancloud":{"app_id":null,"app_key":null},"baidu_analytics":null,"baidu_verification":null,"google_analytics":null,"google_verification":null,"disqus_shortname":null,"changyan":{"appid":null,"appkey":null},"livere_datauid":null,"version":"2.9.0"};
+</script>
+
+    <title> JS专题之数组去重 - 种瓜南山下 </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">种瓜南山下</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            标签
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            分类
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            关于
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">种瓜南山下</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              标签
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              分类
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              关于
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JS专题之数组去重
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-01-28
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一、入门方案"><span class="toc-text">一、入门方案</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、数组的-indexOf-属性"><span class="toc-text">二、数组的 indexOf 属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、数组的-filter-属性"><span class="toc-text">三、数组的 filter 属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四、利用-Object-的-key-value"><span class="toc-text">四、利用 Object 的 key value</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#五、数组的-sort-方法"><span class="toc-text">五、数组的 sort 方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#六、ES6-Set"><span class="toc-text">六、ES6 Set</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#七、ES6-Map"><span class="toc-text">七、ES6 Map</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#八、类型判断"><span class="toc-text">八、类型判断</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div>
+
+
+
+    <div class="post-content">
+      
+        <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>数组去重在日常开发中的使用频率还是较高的，也是网上随便一抓一大把的话题，所以，我写这篇文章目的在于归纳和总结，既然很多人都在提的数组去重，自己到底了解多少呢。又或者是如果自己在开发中遇到了去重的需求，自己能想到更好的解决方案吗。</p>
+<p>这次我们来理一理怎么做数组去重才能做得最合适，既要考虑兼容性，也要考虑性能和代码的优雅。</p>
+<p>我的学习路径是模仿冴羽(github: mqyqingfeng)的学习方式，感谢像冴羽这样优秀的人在前面领跑，我不想光看不做，所以多实践多输出，希望未来能走出我自己的路。</p>
+<h4 id="一、入门方案"><a href="#一、入门方案" class="headerlink" title="一、入门方案"></a>一、入门方案</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">origin</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> result = [];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; origin.length; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> arrayItem = origin[i];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; result.length; j++) &#123;</span><br><span class="line">      <span class="keyword">var</span> resultItem = result[j];</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 如果在结果数组循环中找到了该元素，则跳出循环，进入下一个源数组元素的判断</span></span><br><span class="line">      <span class="keyword">if</span> (resultItem === arrayItem) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果把结果数组循环完都没有找到该元素，就将该元素压入结果数组中</span></span><br><span class="line">    <span class="keyword">if</span> (j === result.length) &#123;</span><br><span class="line">      result.push(arrayItem);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> array = [<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"1"</span>, <span class="number">0</span>, <span class="string">"c"</span>, <span class="number">1</span>, <span class="string">""</span>, <span class="number">1</span>, <span class="number">0</span>];</span><br><span class="line"><span class="built_in">console</span>.log(unique(array)); <span class="comment">// ["a", "b", "c", "1", 0, 1, ""]</span></span><br></pre></td></tr></table></figure>
+<p>以上代码是最简单实现数组去重的方式，优点在于兼容性极好，缺点就是两次 for 循环，时间复杂度为 O(n^2)，性能较差。</p>
+<h4 id="二、数组的-indexOf-属性"><a href="#二、数组的-indexOf-属性" class="headerlink" title="二、数组的 indexOf 属性"></a>二、数组的 indexOf 属性</h4><p>数组中的 indexOf 属性是 ES5 的规范，只有 IE8 及更早版本不支持该方法。相对来说，如果你不需要兼容 IE8 的话，尽量用 indexOf 来判断一个元素是否在数组中。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">origin</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> result = [];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; origin.length; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> item = origin[i];</span><br><span class="line">    <span class="keyword">if</span> (result.indexOf(item) === <span class="number">-1</span>) &#123;</span><br><span class="line">      result.push(item);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="三、数组的-filter-属性"><a href="#三、数组的-filter-属性" class="headerlink" title="三、数组的 filter 属性"></a>三、数组的 filter 属性</h4><blockquote>
+<p>数组的 filter() 方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。</p>
+</blockquote>
+<p>filter 的回调有三个参数，其中第三个参数是当前元素属于的数组对象，这样我们可以继续利用 indexOf 属性啦。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">origin</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> result = origin.filter(<span class="function"><span class="keyword">function</span>(<span class="params">item, index, array</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 获取元素在源数组的位置，只返回那些索引等于当前元素索引的值。</span></span><br><span class="line">    <span class="keyword">return</span> array.indexOf(item) === index;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>filter 兼容到 IE9, 这种方法没有 for 循环，主要利用了 filter 和 indexOf 属性，所以代码相对比较优雅。</p>
+<h4 id="四、利用-Object-的-key-value"><a href="#四、利用-Object-的-key-value" class="headerlink" title="四、利用 Object 的 key value"></a>四、利用 Object 的 key value</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">origin</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> result = [];</span><br><span class="line">  <span class="keyword">var</span> hashTable = &#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; origin.length; i++) &#123;</span><br><span class="line">    <span class="comment">// 如果键对应的值，为真，意味着对象的键中已经有重复的键了。</span></span><br><span class="line">    <span class="keyword">if</span> (!hashTable[origin[i]]) &#123;</span><br><span class="line">      <span class="comment">// 将元素作为对象的键，默认键对应的值为 true,</span></span><br><span class="line">      hashTable[origin[i]] = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 如果对象中没有这个键，则将这个元素放入结果数组中去。</span></span><br><span class="line">      result.push(origin[i]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方案的事件复杂度为 O(n), 但是对象的键，默认是字符串类型，这意味着什么呢，数字 1 和 字符串 ‘1’，在键中是相等的，所以，上面这种方法不适合字符串和数字混合的去重。</p>
+<p>所以我们将元素的类型也放入对象的键中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">origin</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> result = [];</span><br><span class="line">  <span class="keyword">var</span> hashTable = &#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; origin.length; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> current = origin[i];</span><br><span class="line">    <span class="comment">// 字符串拼接元素的类型和元素</span></span><br><span class="line">    <span class="keyword">var</span> key = <span class="keyword">typeof</span> current + current;</span><br><span class="line">    <span class="keyword">if</span> (!hashTable[key]) &#123;</span><br><span class="line">      hashTable[key] = <span class="literal">true</span>;</span><br><span class="line">      result.push(current);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="五、数组的-sort-方法"><a href="#五、数组的-sort-方法" class="headerlink" title="五、数组的 sort 方法"></a>五、数组的 sort 方法</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">origin</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> origin.concat.sort().filter(<span class="function"><span class="keyword">function</span>(<span class="params">item, index, array</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// !index 表示第 0 个元素应该被返回。</span></span><br><span class="line">    <span class="keyword">return</span> !index || item !== origin[index - <span class="number">1</span>];</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">array</span>) </span>&#123;</span><br><span class="line">  array.sort(); <span class="comment">// 排序字符串</span></span><br><span class="line">  array.sort(<span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a - b; <span class="comment">// 排序数字</span></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; array.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (array[i] === array[i + <span class="number">1</span>]) &#123;</span><br><span class="line">      array.splice(i, <span class="number">1</span>);</span><br><span class="line">      i--; <span class="comment">// 应该将前一个数删除，而不是删除后一个数。是因为元素被删除之后，后面元素的索引会迁移，所以要 i--;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> array;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>sort 方法的优点在于利用了排序，返回后一个和前一个不相等的元素。比较简洁和直观。缺点在于改变了元素的本来的排序位置。</p>
+<h4 id="六、ES6-Set"><a href="#六、ES6-Set" class="headerlink" title="六、ES6 Set"></a>六、ES6 Set</h4><p>ES6 提供了新的数据结构 Set,它类似于数组，但是成员的值都是唯一的，没有重复的值。向 Set 加入值的时候，不会发生类型转变，所以 5 和 ‘5’ 是两个不同的值。Set 内部判断两个值是否相同，用的是类似于 “===”的算法，但是区别是，在 set 内部认为 NaN 等于 NaN ；</p>
+<p>Set 可以转换为数组，所以很容易实现去重</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">origin</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Array</span>.from(<span class="keyword">new</span> <span class="built_in">Set</span>(origin));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="七、ES6-Map"><a href="#七、ES6-Map" class="headerlink" title="七、ES6 Map"></a>七、ES6 Map</h4><p>ES6 新增了 Map 数据结果，通过 has 和 set 方法就能很方便的对前面的 object key value 方案进行优化。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">origin</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> map = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line">  <span class="keyword">return</span> origin.filter(<span class="function"><span class="params">item</span> =&gt;</span> !map.has(item) &amp;&amp; map.set(item, <span class="literal">true</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="八、类型判断"><a href="#八、类型判断" class="headerlink" title="八、类型判断"></a>八、类型判断</h4><p>一些常见的数据类型是 <code>===</code> 和 <code>indexOf</code> 是无法检测的，举个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(&#123;&#125; === &#123;&#125;); <span class="comment">// false;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="literal">NaN</span> === <span class="literal">NaN</span>); <span class="comment">// false;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="regexp">/a/</span> === <span class="regexp">/a/</span>); <span class="comment">// false;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">1</span> === <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">"1"</span>)); <span class="comment">// false;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> arr = [<span class="literal">NaN</span>];</span><br><span class="line"><span class="built_in">console</span>.log(arr.indexOf(<span class="literal">NaN</span>)); <span class="comment">// -1</span></span><br></pre></td></tr></table></figure>
+<p>所以在判断的时候，如果数据里有 NaN 和对象时要避免使用 <code>indexOf</code> 和 <code>===</code>;</p>
+<p>前面 Set 那里说过了，所以 Set 方法是可以去重 NaN 的。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>数据去重在网上已经看烦了，但还是想专门写一篇文章来实践和总结，能在工作中多几个思路也是极好的。感谢那些热爱分享和喜欢输出的人。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://lamborshea.github.io">南瓜</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://lamborshea.github.io/2019/01/28/JS专题之数组去重/">http://lamborshea.github.io/2019/01/28/JS专题之数组去重/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/js/">js</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/01/26/JS专题之函数柯里化/">
+        <span class="next-text nav-default">JS专题之函数柯里化</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:nanbo0810@email.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://github.com/Lamborshea" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+        
+          <a href="/zhihu.com/people/xienanbo" class="iconfont icon-zhihu" title="zhihu"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2015 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">南瓜</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.9.0"></script>
+
+  </body>
+</html>
