@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="JS 是一门具有自动垃圾收集的编程语言，在浏览器中主要通过标记清除方法来回收垃圾，NodeJs 中主要通过分代回收、Scavenge、标记清除、增量标记等算法来回收垃圾。"/>
+
+
+
+
+  <meta name="keywords" content="树洞 前端 博客 自留地" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="种瓜南山下">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.9.0" />
+
+
+
+<link rel="canonical" href="http://lamborshea.github.io/2019/02/09/JS专题之垃圾回收/"/>
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.9.0" />
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+<script>
+  window.config = {"title":"种瓜南山下","subtitle":"To see the world.","description":"种瓜南山下，南瓜，南瓜的个人博客，前端博客，全栈博客","author":"南瓜","language":"zh-cmn-Hans","timezone":null,"url":"http://lamborshea.github.io","root":"/","permalink":":year/:month/:day/:title/","permalink_defaults":null,"source_dir":"source","public_dir":"public","tag_dir":"tags","archive_dir":"archives","category_dir":"categories","code_dir":"downloads/code","i18n_dir":":lang","skip_render":null,"new_post_name":":title.md","default_layout":"post","titlecase":true,"external_link":true,"filename_case":0,"render_drafts":false,"post_asset_folder":false,"relative_link":false,"future":true,"highlight":{"enable":true,"auto_detect":true,"line_number":true,"tab_replace":null,"first_line_number":"always1"},"default_category":"uncategorized","category_map":null,"tag_map":null,"date_format":"YYYY-MM-DD","time_format":"HH:mm:ss","per_page":20,"pagination_dir":"page","theme":"even","deploy":{"type":"git","repo":{"github":"git@github.com:Lamborshea/lamborshea.github.io.git,master","coding":"git@git.coding.net:nanbo/nanbo.git,master"}},"ignore":[],"keywords":"树洞 前端 博客 自留地","index_generator":{"per_page":20,"order_by":"-date","path":""},"baidusitemap":{"path":"baidusitemap.xml"},"archive_generator":{"per_page":20,"yearly":true,"monthly":true,"daily":false},"category_generator":{"per_page":20},"tag_generator":{"per_page":20},"sitemap":{"path":"sitemap.xml"},"marked":{"gfm":true,"pedantic":false,"sanitize":false,"tables":true,"breaks":true,"smartLists":true,"smartypants":true,"modifyAnchors":"","autolink":true},"server":{"port":4000,"log":false,"ip":"0.0.0.0","compress":false,"header":true},"since":2015,"favicon":"/favicon.ico","rss":"default","menu":{"Home":"/","Archives":"/archives/","Tags":"/tags","Categories":"/categories","About":"/about"},"color":"Default","toc":true,"fancybox":true,"pjax":true,"copyright":{"enable":true,"license":"<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\">知识共享署名-非商业性使用 4.0 国际许可协议</a>"},"reward":{"enable":false,"qrCode":{"wechat":null,"alipay":null}},"social":{"email":"nanbo0810@email.com","stack-overflow":null,"twitter":null,"facebook":null,"linkedin":null,"google":null,"github":"https://github.com/Lamborshea","weibo":null,"zhihu":"zhihu.com/people/xienanbo","douban":null,"pocket":null,"tumblr":null,"instagram":null},"leancloud":{"app_id":null,"app_key":null},"baidu_analytics":null,"baidu_verification":null,"google_analytics":null,"google_verification":null,"disqus_shortname":null,"changyan":{"appid":null,"appkey":null},"livere_datauid":null,"version":"2.9.0"};
+</script>
+
+    <title> JS专题之垃圾回收 - 种瓜南山下 </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">种瓜南山下</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            标签
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            分类
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            关于
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">种瓜南山下</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              标签
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              分类
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              关于
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JS专题之垃圾回收
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-02-09
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、标记-清除（Mark-Sweep）"><span class="toc-text">二、标记-清除（Mark-Sweep）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、引用计数"><span class="toc-text">三、引用计数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四、NodeJs-V8-中的垃圾回收机制"><span class="toc-text">四、NodeJs V8 中的垃圾回收机制</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#4-1、内存分代算法"><span class="toc-text">4.1、内存分代算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-2-Scavenge-算法"><span class="toc-text">4.2 Scavenge 算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-3-标记-清除和标记-整理算法"><span class="toc-text">4.3 标记-清除和标记-整理算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-4-增量标记（Incremental-Marking）算法"><span class="toc-text">4.4 增量标记（Incremental Marking）算法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#五、内存泄漏"><span class="toc-text">五、内存泄漏</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#六、内存泄漏的常见场景"><span class="toc-text">六、内存泄漏的常见场景</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#6-1-缓存"><span class="toc-text">6.1 缓存</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#6-2-作用域未释放（闭包）"><span class="toc-text">6.2 作用域未释放（闭包）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#6-3-没必要的全局变量"><span class="toc-text">6.3 没必要的全局变量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#6-4-无效的-DOM-引用"><span class="toc-text">6.4 无效的 DOM 引用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#6-5-定时器未清除"><span class="toc-text">6.5 定时器未清除</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#6-6-事件监听为清空"><span class="toc-text">6.6 事件监听为清空</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#七、内存泄漏优化"><span class="toc-text">七、内存泄漏优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div>
+
+
+
+    <div class="post-content">
+      
+        <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>在讲 JS 的垃圾回收（Garbage Collection）之前，我们回顾上一篇《JS 专题之 memoization》，memoization 的原理是以参数作为 key，函数结果作为 value, 用对象进行缓存起来，以内存空间换 CPU 执行事件。memoization 的潜在陷阱即是严格意义的缓存有着完善的过期策略，而普通对象的键值对并没有。</p>
+<p>用闭包进行缓存的对象的内存空间，不会在函数执行完后被清除，在执行量大和参数多样性的情况下，会造成内存占用且得不到释放。</p>
+<p>于是，本篇文章就来讲讲 JS 的垃圾回收。</p>
+<p>JS 的垃圾回收机制的基本原理是：</p>
+<blockquote>
+<p>找出那些不再继续使用的变量，然后释放其占用的内存，垃圾收集器会按照固定的时间间隔周期性地执行这一操作。</p>
+</blockquote>
+<p>那我们怎么知道变量是不是在继续使用呢?</p>
+<p>首先，我之前的文章，《JavaScript 之变量及作用域》，《JavaScript 之作用域链》和《JavaScript 之闭包》都有提到过，局部变量的生存周期是在函数声明和执行阶段，函数执行完毕后，局部变量就没有存在的必要了。全局变量会在浏览器关闭或进程关闭才能释放。</p>
+<p>但还有一些场景，比如闭包，通过作用域链访问到函数外部的自由变量，使得自由变量保存在内存中，不会随着函数执行完毕而结束，以及对象的相互引用等，垃圾收集器就没这么容易判断哪个变量有用，哪个变量没用了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 经典闭包</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">closure</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> name = <span class="string">"innerName"</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(name);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> inner = closure();</span><br><span class="line">inner(); <span class="comment">// innerName;</span></span><br></pre></td></tr></table></figure>
+<p>所以，对于标识无用的变量的策略可能会因实现而已，但目前在浏览器中，通常有两种策略：标记清除和引用计数。</p>
+<h4 id="二、标记-清除（Mark-Sweep）"><a href="#二、标记-清除（Mark-Sweep）" class="headerlink" title="二、标记-清除（Mark-Sweep）"></a>二、标记-清除（Mark-Sweep）</h4><p>从 2012 年起，所有现代浏览器都使用了标记-清除垃圾回收算法, 那什么叫标记-清除呢？</p>
+<p>当变量进入执行环境时，就标记这个变量为“进入环境”。当变量离开环境时，则将其标记为“离开环境”。从逻辑上讲，永远不能释放进入环境的变量所占用的内存，因为只要执行流进入相应的环境，就可能会用到他们。</p>
+<p>垃圾收集器在运行的时候会给存储在内存中的所有变量都加上标记。</p>
+<p>然后，它会去掉环境中的变量以及被环境中的变量引用的标记。而在此之后再被加上标记的变量将被视为准备删除的变量，原因是环境中的变量已经无法访问到这些变量了。</p>
+<p>最后，垃圾收集器完成内存清除工作，销毁那些带标记的值，并回收他们所占用的内存空间。</p>
+<p>另外，标记-清除有一个问题，就是在清除之后，内存空间是不连续的，即出现了内存碎片。如果后面需要一个比较大的连续的内存空间时，那将不能满足要求。而标记-整理（Mark-Compact）方法可以有效地解决这个问题。标记阶段没有什么不同，只是标记结束后，标记-整理方法会将活着的对象向内存的一端移动，最后清理掉边界的内存。</p>
+<h4 id="三、引用计数"><a href="#三、引用计数" class="headerlink" title="三、引用计数"></a>三、引用计数</h4><p>另外一种不太常见的垃圾收集策略叫引用计数（Reference Counting）,此算法把“对象是否不再需要”简化定义为“对象有没有其他对象引用到它”。如果没有引用指向该对象（零引用），对象将被垃圾回收机制回收。</p>
+<p>引用计数的策略是跟踪记录每个值被使用的次数，当声明了一个变量并将一个引用类型赋值给该变量的时候这个值的引用次数就加 1，如果该变量的值变成了另外一个，则这个值得引用次数减 1，当这个值的引用次数变为 0 的时候，说明没有变量在使用，这个值没法被访问了，因此可以将其占用的空间回收，这样垃圾回收器会在运行的时候清理掉引用次数为 0 的值占用的内存。</p>
+<p>而引用计数的不继续被使用，是因为循环引用的问题会引发内存泄漏。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">problem</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> objA = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">  <span class="keyword">var</span> objB = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">  objA.someObject = objB;</span><br><span class="line">  objB.anotherObject = objA;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>objA 和 objB 通过各自的属性相互引用，也就是说，两个对象的引用次数都是 2。在函数执行完毕后，objA, objB 还将继续存在，因为他们的引用计数永远不会是 0。假如这个函数被多次执行，就会导致大量的内存得不到释放。</p>
+<h4 id="四、NodeJs-V8-中的垃圾回收机制"><a href="#四、NodeJs-V8-中的垃圾回收机制" class="headerlink" title="四、NodeJs V8 中的垃圾回收机制"></a>四、NodeJs V8 中的垃圾回收机制</h4><p>在 Node 中，通过 JS 使用内存时就会发现只能使用部分内存（64 位系统下约为 1.4 GB, 32 位系统下约为 0.7 GB），这导致 Node 无法直接操作大内存对象。</p>
+<p>这是因为，以 1.5GB 的垃圾回收堆内存为例，V8 做一次小的垃圾回收需要 50 毫秒以上，做一次非增量式的垃圾回收要 1 秒以上，而垃圾回收过程会引起 JS 线程暂停执行这么多时间。因此，在当时的考虑下，直接限制堆内存是一个好的选择。</p>
+<p>那么，在这样的内存限制下，V8 的垃圾回收机制又有什么特点？</p>
+<h5 id="4-1、内存分代算法"><a href="#4-1、内存分代算法" class="headerlink" title="4.1、内存分代算法"></a>4.1、内存分代算法</h5><p>V8 的垃圾回收策略主要基于分代式垃圾回收机制，在 V8 中，将内存分为新生代和老生代，新生代的对象为存活时间较短的对象，老生代的对象为存活事件较长或常驻内存的对象。</p>
+<p><img src="http://qiniu.xienanbo.com/img/20190209161307.png" alt=""></p>
+<p>V8 堆的整体大小等于新生代所用内存空间加上老生代的内存空间，而只能在启动时指定，意味着运行时无法自动扩充，如果超过了极限值，就会引起进程出错。</p>
+<h5 id="4-2-Scavenge-算法"><a href="#4-2-Scavenge-算法" class="headerlink" title="4.2 Scavenge 算法"></a>4.2 Scavenge 算法</h5><p>在分代的基础上，新生代的对象主要通过 Scavenge 算法进行垃圾回收，在 Scavenge 具体实现中，主要采用了一种复制的方式的方法—— Cheney 算法。</p>
+<p>Cheney 算法将堆内存一分为二，一个处于使用状态的空间叫 From 空间，一个处于闲置状态的空间称为 To 空间。分配对象时，先是在 From 空间中进行分配。</p>
+<p>当开始进行垃圾回收时，会检查 From 空间中的存活对象，将其复制到 To 空间中，而非存活对象占用的空间将会被释放。完成复制后，From 空间和 To 空间的角色发生对换。</p>
+<p><img src="http://qiniu.xienanbo.com/Jietu20190209-162852@2x.jpg" alt=""></p>
+<p>当一个对象经过多次复制后依然存活，他将会被认为是生命周期较长的对象，随后会被移动到老生代中，采用新的算法进行管理。</p>
+<p>还有一种情况是，如果复制一个对象到 To 空间时，To 空间占用超过了 25%，则这个对象会被直接晋升到老生代空间中。</p>
+<h5 id="4-3-标记-清除和标记-整理算法"><a href="#4-3-标记-清除和标记-整理算法" class="headerlink" title="4.3 标记-清除和标记-整理算法"></a>4.3 标记-清除和标记-整理算法</h5><p>对于老生代中的对象，主要采用标记-清除和标记-整理算法。标记-清除 和前文提到的标记一样，与 Scavenge 算法相比，标记清除不会将内存空间划为两半，标记清除在标记阶段会标记活着的对象，而在内存回收阶段，它会清除没有被标记的对象。</p>
+<p>而标记整理是为了解决标记清除后留下的内存碎片问题。</p>
+<h5 id="4-4-增量标记（Incremental-Marking）算法"><a href="#4-4-增量标记（Incremental-Marking）算法" class="headerlink" title="4.4 增量标记（Incremental Marking）算法"></a>4.4 增量标记（Incremental Marking）算法</h5><p>前面的三种算法，都需要将正在执行的 JavaScript 应用逻辑暂停下来，待垃圾回收完毕后再恢复。这种行为叫作“全停顿”（stop-the-world）。</p>
+<p>在 V8 新生代的分代回收中，只收集新生代，而新生代通常配置较小，且存活对象较少，所以全停顿的影响不大，而老生代就相反了。</p>
+<p>为了降低全部老生代全堆垃圾回收带来的停顿时间，V8 将标记过程分为一个个的子标记过程，同时让垃圾回收标记和 JS 应用逻辑交替进行，直到标记阶段完成。</p>
+<p><img src="http://qiniu.xienanbo.com/Jietu20190209-183909@2x.jpg" alt=""></p>
+<p>经过增量标记改进后，垃圾回收的最大停顿时间可以减少到原来的 1/6 左右。</p>
+<h4 id="五、内存泄漏"><a href="#五、内存泄漏" class="headerlink" title="五、内存泄漏"></a>五、内存泄漏</h4><blockquote>
+<p>内存泄漏（Memory Leak）是指程序中己动态分配的堆内存由于某种原因程序未释放或无法释放，造成系统内存的浪费，导致程序运行速度减慢甚至系统崩溃等严重后果。</p>
+</blockquote>
+<h4 id="六、内存泄漏的常见场景"><a href="#六、内存泄漏的常见场景" class="headerlink" title="六、内存泄漏的常见场景"></a>六、内存泄漏的常见场景</h4><h5 id="6-1-缓存"><a href="#6-1-缓存" class="headerlink" title="6.1 缓存"></a>6.1 缓存</h5><p>文章前言部分就有说到，JS 开发者喜欢用对象的键值对来缓存函数的计算结果，但是缓存中存储的键越多，长期存活的对象也就越多，这将导致垃圾回收在进行扫描和整理时，对这些对象做无用功。</p>
+<h5 id="6-2-作用域未释放（闭包）"><a href="#6-2-作用域未释放（闭包）" class="headerlink" title="6.2 作用域未释放（闭包）"></a>6.2 作用域未释放（闭包）</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> leakArray = [];</span><br><span class="line">exports.leak = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  leakArray.push(<span class="string">"leak"</span> + <span class="built_in">Math</span>.random());</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>以上代码，模块在编译执行后形成的作用域因为模块缓存的原因，不被释放，每次调用 leak 方法，都会导致局部变量 leakArray 不停增加且不被释放。</p>
+<p>闭包可以维持函数内部变量驻留内存，使其得不到释放。</p>
+<h5 id="6-3-没必要的全局变量"><a href="#6-3-没必要的全局变量" class="headerlink" title="6.3 没必要的全局变量"></a>6.3 没必要的全局变量</h5><p>声明过多的全局变量，会导致变量常驻内存，要直到进程结束才能够释放内存。</p>
+<h5 id="6-4-无效的-DOM-引用"><a href="#6-4-无效的-DOM-引用" class="headerlink" title="6.4 无效的 DOM 引用"></a>6.4 无效的 DOM 引用</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//dom still exist</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">click</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 但是 button 变量的引用仍然在内存当中。</span></span><br><span class="line">  <span class="keyword">const</span> button = <span class="built_in">document</span>.getElementById(<span class="string">"button"</span>);</span><br><span class="line">  button.click();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 移除 button 元素</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">removeBtn</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">document</span>.body.removeChild(<span class="built_in">document</span>.getElementById(<span class="string">"button"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="6-5-定时器未清除"><a href="#6-5-定时器未清除" class="headerlink" title="6.5 定时器未清除"></a>6.5 定时器未清除</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// vue 的 mounted 或 react 的 componentDidMount</span></span><br><span class="line">componentDidMount() &#123;</span><br><span class="line">    setInterval(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="comment">// ...do something</span></span><br><span class="line">    &#125;, <span class="number">1000</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>vue 或 react 的页面生命周期初始化时，定义了定时器，但是在离开页面后，未清除定时器，就会导致内存泄漏。</p>
+<h5 id="6-6-事件监听为清空"><a href="#6-6-事件监听为清空" class="headerlink" title="6.6 事件监听为清空"></a>6.6 事件监听为清空</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">componentDidMount() &#123;</span><br><span class="line">    <span class="built_in">window</span>.addEventListener(<span class="string">"scroll"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="comment">// do something...</span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同 6.5, 在页面生命周期初始化时，绑定了事件监听器，但在离开页面后，未清除事件监听器，同样也会导致内存泄漏。</p>
+<h4 id="七、内存泄漏优化"><a href="#七、内存泄漏优化" class="headerlink" title="七、内存泄漏优化"></a>七、内存泄漏优化</h4><ol>
+<li>解除引用<br>确保占用最少的内存可以让页面获得更好的性能。而优化内存占用的最佳方式，就是为执行中的代码只保存必要的数据。一旦数据不再有用，最好通过将其值设置为 null 来释放其引用——这个做法叫做解除引用（dereferencing）</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createPerson</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> localPerson = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">  localPerson.name = name;</span><br><span class="line">  <span class="keyword">return</span> localPerson;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> globalPerson = createPerson(<span class="string">"Nicholas"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 手动解除 globalPerson 的引用</span></span><br><span class="line">globalPerson = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+<p>解除一个值的引用并不意味着自动回收该值所占用的内存。解除引用的真正作用是让值脱离执行环境，以便垃圾收集器下次运行时将其回收。</p>
+<ol start="2">
+<li>提供手动清空变量的方法</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> leakArray = [];</span><br><span class="line">exports.clear = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  leakArray = [];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>在业务不需要用到的内部函数，可以重构在函数外，实现解除闭包</li>
+<li>避免创建过多生命周期较长的对象，或将对象分解成多个子对象</li>
+<li>避免过多使用闭包</li>
+<li>注意清除定时器和事件监听器</li>
+<li>Nodejs 中使用 stream 或 buffer 来操作大文件，不会受 Nodejs 内存限制</li>
+<li>使用 redis 等外部工具缓存数据</li>
+</ol>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>JS 是一门具有自动垃圾收集的编程语言，在浏览器中主要通过标记清除方法来回收垃圾，NodeJs 中主要通过分代回收、Scavenge、标记清除、增量标记等算法来回收垃圾。在日常开发中，有一些不引人注意的书写方式可能会导致内存泄漏，需要多注意自己的代码规范。</p>
+<blockquote>
+<p>2019/02/09 @Starbucks</p>
+</blockquote>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://lamborshea.github.io">南瓜</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://lamborshea.github.io/2019/02/09/JS专题之垃圾回收/">http://lamborshea.github.io/2019/02/09/JS专题之垃圾回收/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/js/">js</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/02/08/JS专题之memoization/">
+        <span class="next-text nav-default">JS专题之memoization</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:nanbo0810@email.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://github.com/Lamborshea" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+        
+          <a href="/zhihu.com/people/xienanbo" class="iconfont icon-zhihu" title="zhihu"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2015 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">南瓜</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.9.0"></script>
+
+  </body>
+</html>
