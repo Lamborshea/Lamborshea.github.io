@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="回调函数是 JS 异步编程中的基石，但同时也存在很多问题，不太适合人类自然语言的线性思维习惯。"/>
+
+
+
+
+  <meta name="keywords" content="树洞 前端 博客 自留地" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="种瓜南山下">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.9.0" />
+
+
+
+<link rel="canonical" href="http://lamborshea.github.io/2019/02/17/JS异步编程之callback/"/>
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.9.0" />
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+<script>
+  window.config = {"title":"种瓜南山下","subtitle":"To see the world.","description":"种瓜南山下，南瓜，南瓜的个人博客，前端博客，全栈博客","author":"南瓜","language":"zh-cmn-Hans","timezone":null,"url":"http://lamborshea.github.io","root":"/","permalink":":year/:month/:day/:title/","permalink_defaults":null,"source_dir":"source","public_dir":"public","tag_dir":"tags","archive_dir":"archives","category_dir":"categories","code_dir":"downloads/code","i18n_dir":":lang","skip_render":null,"new_post_name":":title.md","default_layout":"post","titlecase":true,"external_link":true,"filename_case":0,"render_drafts":false,"post_asset_folder":false,"relative_link":false,"future":true,"highlight":{"enable":true,"auto_detect":true,"line_number":true,"tab_replace":null,"first_line_number":"always1"},"default_category":"uncategorized","category_map":null,"tag_map":null,"date_format":"YYYY-MM-DD","time_format":"HH:mm:ss","per_page":20,"pagination_dir":"page","theme":"even","deploy":{"type":"git","repo":{"github":"git@github.com:Lamborshea/lamborshea.github.io.git,master","coding":"git@git.coding.net:nanbo/nanbo.git,master"}},"ignore":[],"keywords":"树洞 前端 博客 自留地","index_generator":{"per_page":20,"order_by":"-date","path":""},"archive_generator":{"per_page":20,"yearly":true,"monthly":true,"daily":false},"category_generator":{"per_page":20},"baidusitemap":{"path":"baidusitemap.xml"},"sitemap":{"path":"sitemap.xml"},"tag_generator":{"per_page":20},"server":{"port":4000,"log":false,"ip":"0.0.0.0","compress":false,"header":true},"marked":{"gfm":true,"pedantic":false,"sanitize":false,"tables":true,"breaks":true,"smartLists":true,"smartypants":true,"modifyAnchors":"","autolink":true},"since":2015,"favicon":"/favicon.ico","rss":"default","menu":{"Home":"/","Archives":"/archives/","Tags":"/tags","Categories":"/categories","About":"/about"},"color":"Default","toc":true,"fancybox":true,"pjax":true,"copyright":{"enable":true,"license":"<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\">知识共享署名-非商业性使用 4.0 国际许可协议</a>"},"reward":{"enable":false,"qrCode":{"wechat":null,"alipay":null}},"social":{"email":"nanbo0810@email.com","stack-overflow":null,"twitter":null,"facebook":null,"linkedin":null,"google":null,"github":"https://github.com/Lamborshea","weibo":null,"zhihu":"zhihu.com/people/xienanbo","douban":null,"pocket":null,"tumblr":null,"instagram":null},"leancloud":{"app_id":null,"app_key":null},"baidu_analytics":null,"baidu_verification":null,"google_analytics":null,"google_verification":null,"disqus_shortname":null,"changyan":{"appid":null,"appkey":null},"livere_datauid":null,"version":"2.9.0"};
+</script>
+
+    <title> JS异步编程之callback - 种瓜南山下 </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">种瓜南山下</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            标签
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            分类
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            关于
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">种瓜南山下</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              标签
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              分类
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              关于
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JS异步编程之callback
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-02-17
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#为什么-JS-是单线程？"><span class="toc-text">为什么 JS 是单线程？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一、同步与异步"><span class="toc-text">一、同步与异步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、事件循环"><span class="toc-text">三、事件循环</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四、回调函数"><span class="toc-text">四、回调函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#五、回调函数的问题"><span class="toc-text">五、回调函数的问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div>
+
+
+
+    <div class="post-content">
+      
+        <h4 id="为什么-JS-是单线程？"><a href="#为什么-JS-是单线程？" class="headerlink" title="为什么 JS 是单线程？"></a>为什么 JS 是单线程？</h4><p>众所周知，Javascript 语言的执行环境是”单线程”（single thread）。</p>
+<p>所谓”单线程”，就是指一次只能完成一件任务。如果有多个任务，就必须排队，前面一个任务完成，再执行后面一个任务，以此类推。</p>
+<p>而浏览器是多线程的，JS 线程就是其中一个：</p>
+<ul>
+<li>浏览器 GUI 渲染线程</li>
+<li>JavaScript 引擎线程</li>
+<li>浏览器定时触发器线程</li>
+<li>浏览器事件触发线程</li>
+<li>浏览器 http 异步请求线程</li>
+</ul>
+<p>浏览器线程知识中重要的一点是：</p>
+<blockquote>
+<p>GUI 渲染进程和 JavaScript 引擎进程是互斥的，因为如果这两个线程可以同时运行的话， JavaScript 的 DOM 操作将会扰乱渲染线程执行渲染前后的数据一致性。而且如果 DOM 一变化，界面就立刻重新渲染，效率必然很低</p>
+</blockquote>
+<p>所以 JS 主线程执行任务时，浏览器渲染线程处于挂起状态。</p>
+<p>同理，如果 JS 采用多线程同步的模型，那么如何保证同一时间修改了 DOM, 到底是哪个线程先生效呢？从操作系统调度多线程的上下文开销，到实际编程里的锁、线程同步等问题，都让开发变得比较困难。</p>
+<p>所以 JS 最终采用了单线程的事件模型。</p>
+<p>我之前的文章《JS 专题之事件循环》也有讲过这块内容，欢迎翻阅。</p>
+<h4 id="一、同步与异步"><a href="#一、同步与异步" class="headerlink" title="一、同步与异步"></a>一、同步与异步</h4><blockquote>
+<p>单线程模式这种排队执行的好处是实现起来比较简单，执行环境相对单纯；坏处是只要有一个任务耗时很长，后面的任务都必须排队等着，会拖延整个程序的执行。常见的浏览器无响应（假死），往往就是因为某一段 Javascript 代码长时间运行（比如死循环），导致整个页面卡在这个地方，其他任务无法执行。</p>
+</blockquote>
+<p>为了解决这个问题，Javascript 语言将任务的执行模式分成两种：同步（Synchronous）和异步（Asynchronous）。</p>
+<p>那同步和异步的区别是什么？</p>
+<p>我们想象一个很常见的场景：我们去面馆吃牛肉面，柜台人很多，前面在排队下单。</p>
+<p>这个时候，同步就是，收银员收了你的钱，告诉你要在柜台站着等面煮好，煮好后，就端面开吃，后面的人也只能等前面的人面煮好了才能付款下单然后等着面煮好端走~</p>
+<p>而异步就是，收银员收了你的钱，然后给了你一张小票，小票上有一个你的编号，收银员告诉你，可以去座位上，你的面一煮好，会大声叫你，你就来端面开吃。</p>
+<p>我们可以看出，我们是过程的调用者，面馆是被调用者，<strong>牛肉面煮好，是我们想要的结果</strong>，同步是调用者需要主动地<strong>等待</strong>这个结果。异步是被动的等待结果，当被调用者有结果了，就会通过消息机制或者回调机制告诉调用者结果。</p>
+<blockquote>
+<p>同步和异步关注的是消息通信机制，同步就是在发出一个<strong>调用</strong>时，在没有得到结果之前，该<strong>调用</strong>就不返回。但是一旦调用返回，就得到返回值了。</p>
+<p>而异步则是相反，调用在发出之后，这个调用就直接返回了，所以没有返回结果, 而是在调用发出后，<strong>被调用者</strong>通过状态、通知来通知调用者，或通过回调函数处理这个调用。</p>
+</blockquote>
+<p>以上：</p>
+<ul>
+<li>下单吃面是发起调用函数</li>
+<li>端面开吃的回调函数</li>
+<li>煮好的面是调用的结果，也是回调函数的参数</li>
+</ul>
+<p>将例子抽象成伪代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">orderNoodle(<span class="string">"牛肉面"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">noodle</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 端面</span></span><br><span class="line">  getNoodle();</span><br><span class="line">  <span class="comment">// 吃面</span></span><br><span class="line">  eatNoodle();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="三、事件循环"><a href="#三、事件循环" class="headerlink" title="三、事件循环"></a>三、事件循环</h4><p>关于事件循环如何执行异步代码可以翻阅前面的文章《JS 专题之事件循环》，这里大概提一下。</p>
+<p>如果遇到异步事件，JS 引擎会把事件函数压入执行调用栈，但浏览器识别到它是异步事件后，会将其弹出执行栈，当异步函数有返回结果后，JS 引擎将异步事件的回调函数放入事件队列中，如果执行调用栈为空，就将回调函数压入执行调用栈执行。</p>
+<h4 id="四、回调函数"><a href="#四、回调函数" class="headerlink" title="四、回调函数"></a>四、回调函数</h4><p>在 JavaScript 中，函数 function 作为一等公民，使用上非常自由，无论调用它，或者作为参数，或者作为返回值都可以。</p>
+<p>因为单线程异步的特点，后来在 JS 中，慢慢将函数的业务重点转移到了回调函数中。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">step1</span>(<span class="params">cb</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"step1"</span>);</span><br><span class="line">  cb();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">step2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"step2"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">step1(step2); <span class="comment">// step1  step2</span></span><br></pre></td></tr></table></figure>
+<p>代码会按先后顺序执行 step1, step2。</p>
+<p>现在假设我们有这样的需求：请求文件 1 后，获取文件 1 中的数据后请求文件 2，获取文件 2 中的数据后，又请求文件三。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">"fs"</span>);</span><br><span class="line"></span><br><span class="line">fs.readFile(<span class="string">"./file1.json"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err, data1</span>) </span>&#123;</span><br><span class="line">  fs.readFile(<span class="string">"./file2.json"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err, data2</span>) </span>&#123;</span><br><span class="line">    fs.readFile(<span class="string">"./file3.json"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err, data3</span>) </span>&#123;&#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="五、回调函数的问题"><a href="#五、回调函数的问题" class="headerlink" title="五、回调函数的问题"></a>五、回调函数的问题</h4><p>由第四节可以看出，回调函数的写法存在很多问题。</p>
+<ol>
+<li>回调地狱（洋葱模型）</li>
+</ol>
+<p>当多个异步事务多级依赖时，回调函数会形成多级的嵌套，被花括号一层层包括，代码变成<br>金字塔型结构，也被称为回调地狱和洋葱模型。</p>
+<p>在回调地狱的情况下，代码逻辑的梳理，流程的控制，代码封装维护，错误处理都变得越来越困难。</p>
+<ol start="2">
+<li>异常处理</li>
+</ol>
+<p>try…catch 是被设计成捕获<strong>当前执行环境</strong>的异常，意思是只能捕获同步代码里面的异常，异步调用里面的异常无法捕获。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readFile</span>(<span class="params">fileName</span>) </span>&#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"类型错误"</span>);</span><br><span class="line">  &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  readFile(<span class="string">"./file1.json"</span>);</span><br><span class="line">&#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">  <span class="comment">// 如果异步事件出错，打印不出来错误信息</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"err"</span>, e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 nodejs 对回调函数采用 error first 的思想，回调函数的第一个参数保留给一个错误 error 对象，如果有错误发生，错误将通过第一个参数 err 返回。</p>
+<p>原因是一个有回调函数的函数，执行分两段，第一段执行完之后，任务所在的上下文环境就已经结束了。在这以后抛出的错误，原来的上下文已经无法捕捉，只能当做参数，传入第二阶段。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fs.readFile(<span class="string">"/etc/passwd"</span>, <span class="string">"utf8"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err, data</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(err);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>回调函数是 JS 异步编程中的基石，但同时也存在很多问题，不太适合人类自然语言的线性思维习惯。</p>
+<p>接下来几篇文章，我将梳理 JS 中异步编程中的历史演进中 Promise, generator, async&amp;await 相关的内容，欢迎关注。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://lamborshea.github.io">南瓜</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://lamborshea.github.io/2019/02/17/JS异步编程之callback/">http://lamborshea.github.io/2019/02/17/JS异步编程之callback/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/js/">js</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/02/10/JS专题之继承/">
+        <span class="next-text nav-default">JS专题之继承</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:nanbo0810@email.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://github.com/Lamborshea" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+        
+          <a href="/zhihu.com/people/xienanbo" class="iconfont icon-zhihu" title="zhihu"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2015 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">南瓜</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.9.0"></script>
+
+  </body>
+</html>
