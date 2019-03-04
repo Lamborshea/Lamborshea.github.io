@@ -4,6 +4,40 @@
 
     
   <url>
+    <loc>http://lamborshea.github.io/2019/03/04/JS%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8Basync-await/</loc>
+    <lastmod>2019-03-04T02:37:00.429Z</lastmod>
+    <data>
+        <display>
+        <title>JS异步编程之async&await</title>
+        <pubTime>2019-03-04T02:35:27.000Z</pubTime>
+        
+        <tag>js</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://lamborshea.github.io/2019/03/04/JS%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8BGenerator/</loc>
+    <lastmod>2019-03-04T02:36:28.167Z</lastmod>
+    <data>
+        <display>
+        <title>JS异步编程之Generator</title>
+        <pubTime>2019-03-04T02:16:05.000Z</pubTime>
+        
+        <tag>js</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://lamborshea.github.io/2019/02/24/JS%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8BPromise/</loc>
     <lastmod>2019-02-24T08:25:51.513Z</lastmod>
     <data>
