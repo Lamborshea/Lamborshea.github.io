@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://lamborshea.github.io/2019/03/10/JS%E6%A8%A1%E5%9D%97%E5%8C%96%E7%BC%96%E7%A8%8B/</loc>
+    
+    <lastmod>2019-03-10T06:53:45.982Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://lamborshea.github.io/2019/03/04/JS%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8Basync-await/</loc>
     
     <lastmod>2019-03-04T02:37:00.429Z</lastmod>
