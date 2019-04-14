@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="浏览器缓存分为强制缓存和协商缓存，强制缓存中 Cache-Control 比 Expires 的优先级更高。协商缓存中，If-None-Match 比 If-Modified-Since 的优先级更高。"/>
+
+
+
+
+  <meta name="keywords" content="树洞 前端 博客 自留地" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="种瓜南山下">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.9.0" />
+
+
+
+<link rel="canonical" href="http://lamborshea.github.io/2019/04/14/前端网络编程之缓存策略/"/>
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.9.0" />
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+<script>
+  window.config = {"title":"种瓜南山下","subtitle":"To see the world.","description":"种瓜南山下，南瓜，南瓜的个人博客，前端博客，全栈博客","author":"南瓜","language":"zh-cmn-Hans","timezone":null,"url":"http://lamborshea.github.io","root":"/","permalink":":year/:month/:day/:title/","permalink_defaults":null,"source_dir":"source","public_dir":"public","tag_dir":"tags","archive_dir":"archives","category_dir":"categories","code_dir":"downloads/code","i18n_dir":":lang","skip_render":null,"new_post_name":":title.md","default_layout":"post","titlecase":true,"external_link":true,"filename_case":0,"render_drafts":false,"post_asset_folder":false,"relative_link":false,"future":true,"highlight":{"enable":true,"auto_detect":true,"line_number":true,"tab_replace":null,"first_line_number":"always1"},"default_category":"uncategorized","category_map":null,"tag_map":null,"date_format":"YYYY-MM-DD","time_format":"HH:mm:ss","per_page":20,"pagination_dir":"page","theme":"even","deploy":{"type":"git","repo":{"github":"git@github.com:Lamborshea/lamborshea.github.io.git,master","coding":"git@git.coding.net:nanbo/nanbo.git,master"}},"ignore":[],"keywords":"树洞 前端 博客 自留地","index_generator":{"per_page":20,"order_by":"-date","path":""},"category_generator":{"per_page":20},"baidusitemap":{"path":"baidusitemap.xml"},"sitemap":{"path":"sitemap.xml"},"tag_generator":{"per_page":20},"marked":{"gfm":true,"pedantic":false,"sanitize":false,"tables":true,"breaks":true,"smartLists":true,"smartypants":true,"modifyAnchors":"","autolink":true},"archive_generator":{"per_page":20,"yearly":true,"monthly":true,"daily":false},"server":{"port":4000,"log":false,"ip":"0.0.0.0","compress":false,"header":true},"since":2015,"favicon":"/favicon.ico","rss":"default","menu":{"Home":"/","Archives":"/archives/","Tags":"/tags","Categories":"/categories","About":"/about"},"color":"Default","toc":true,"fancybox":true,"pjax":true,"copyright":{"enable":true,"license":"<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\">知识共享署名-非商业性使用 4.0 国际许可协议</a>"},"reward":{"enable":false,"qrCode":{"wechat":null,"alipay":null}},"social":{"email":"nanbo0810@email.com","stack-overflow":null,"twitter":null,"facebook":null,"linkedin":null,"google":null,"github":"https://github.com/Lamborshea","weibo":null,"zhihu":"zhihu.com/people/xienanbo","douban":null,"pocket":null,"tumblr":null,"instagram":null},"leancloud":{"app_id":null,"app_key":null},"baidu_analytics":null,"baidu_verification":null,"google_analytics":null,"google_verification":null,"disqus_shortname":null,"changyan":{"appid":null,"appkey":null},"livere_datauid":null,"version":"2.9.0"};
+</script>
+
+    <title> 前端网络编程之缓存策略 - 种瓜南山下 </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">种瓜南山下</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            标签
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            分类
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            关于
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">种瓜南山下</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              标签
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              分类
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              关于
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          前端网络编程之缓存策略
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-04-14
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一、HTTP-缓存"><span class="toc-text">一、HTTP 缓存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、缓存位置"><span class="toc-text">二、缓存位置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、强制缓存"><span class="toc-text">三、强制缓存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四、协商缓存"><span class="toc-text">四、协商缓存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#五、200-和-304"><span class="toc-text">五、200 和 304</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#六、缓存更新"><span class="toc-text">六、缓存更新</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#七、谈谈微信浏览器的坑"><span class="toc-text">七、谈谈微信浏览器的坑</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div>
+
+
+
+    <div class="post-content">
+      
+        <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p><strong>为什么要写这篇文章？</strong><br>故事背景发生在 2019 年的某一天，国内某大型开源 CDN 网站服务器奔溃之后。公司的 H5 产品，引用了他们的 CDN 资源，当天无法访问，后来我们紧急发布了热修复，用阿里云 CDN 资源替换了线上的链接地址。</p>
+<p>发布热补丁之后，我们期望的结果当然是用户重新打开微信公众号访问 H5 就能正常加载最新的资源，正常访问。</p>
+<p>但是，最后的问题是，iOS 系统的微信公众号能够正常访问，安卓却不行，安卓加载的还是缓存中的静态资源文件。</p>
+<p>这里面当然是因为微信安卓的浏览器内核对缓存做了特殊的处理（坑），但是怎么从根本上解决缓存问题？</p>
+<p>关于 HTTP 缓存的文章网上很多，所以我这里主要做简单总结和问题探讨。</p>
+<p>问题：</p>
+<ol>
+<li>HTTP 缓存策略是什么样的原理？</li>
+<li>缓存响应的状态码 200 和 304 状态码有什么区别？</li>
+<li>如何高效的利用缓存？</li>
+<li>假如想利用 HTTP 请求统计用户访问量，有缓存不就没用了？</li>
+</ol>
+<p>先给结论：</p>
+<ol>
+<li>缓存策略分为强制缓存和协商缓存</li>
+<li>缓存位置分为 CacheStorage、内存缓存、硬盘缓存</li>
+<li>200 代表从本地缓存中获取，304 代表和服务器进行过一次通信后从浏览器缓存中获取</li>
+<li>尽可能将静态资源的缓存周期变长，index.html 不应该被缓存，利用 GET 请求进行缓存</li>
+<li>利用 1*1 px 透明图片埋点和 referer 来统计用户访问量,该图片路径不缓存</li>
+</ol>
+<h4 id="一、HTTP-缓存"><a href="#一、HTTP-缓存" class="headerlink" title="一、HTTP 缓存"></a>一、HTTP 缓存</h4><blockquote>
+<p>缓存是一种保存资源副本并在下次请求时直接使用该副本的技术</p>
+</blockquote>
+<p>浏览器缓存一般只有 GET 请求才有效。</p>
+<p>缓存的种类有很多,其大致可归为两类：私有与共享缓存。共享缓存存储的响应能够被多个用户使用。私有缓存只能用于单独用户。</p>
+<p>“public” 指令表示该响应可以被任何中间人（译者注：比如中间代理、CDN 等）缓存,隐含的意思是，其他用户可能也能分享这个资源的缓存</p>
+<p>private 是指资源应该被缓存，但是只能被客户端的浏览器缓存.</p>
+<p>下面是和 HTTP 缓存有关的 HTTP 消息头：</p>
+<table>
+<thead>
+<tr>
+<th>HTTP Header</th>
+<th>出现在</th>
+<th>应用在</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cache-Control</td>
+<td>请求、响应</td>
+<td>强制和协商缓存</td>
+</tr>
+<tr>
+<td>Expires</td>
+<td>响应</td>
+<td>强制缓存</td>
+</tr>
+<tr>
+<td>Last-Modified</td>
+<td>响应</td>
+<td>协商缓存</td>
+</tr>
+<tr>
+<td>If-Modified-Since</td>
+<td>请求</td>
+<td>协商缓存</td>
+</tr>
+<tr>
+<td>ETag</td>
+<td>响应</td>
+<td>协商缓存</td>
+</tr>
+<tr>
+<td>If-None-Match</td>
+<td>请求</td>
+<td>协商缓存</td>
+</tr>
+</tbody>
+</table>
+<h4 id="二、缓存位置"><a href="#二、缓存位置" class="headerlink" title="二、缓存位置"></a>二、缓存位置</h4><p>文件的缓存位置，目前普遍使用的有三种，其中 cacheStorage 是在 ServiceWorker 中应用中产生的。</p>
+<table>
+<thead>
+<tr>
+<th>缓存位置</th>
+<th>资源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>from ServiceWorker（cacheStorage）</td>
+<td>通过 ServiceWorker 注册安装</td>
+</tr>
+<tr>
+<td>from memory cache</td>
+<td>脚本、字体、图片</td>
+</tr>
+<tr>
+<td>from disk cache</td>
+<td>非脚本：css、svg</td>
+</tr>
+</tbody>
+</table>
+<p>缓存放在内存还是硬盘中，也会和文件大小有关系。</p>
+<h4 id="三、强制缓存"><a href="#三、强制缓存" class="headerlink" title="三、强制缓存"></a>三、强制缓存</h4><p>强制缓存是通过 Expires 和 Cache Control 的 max-age 来判断缓存是否过期的策略，此时不会向服务器发起请求。</p>
+<p>如果缓存没有过期，将会直接从浏览器缓存中获取资源。</p>
+<p>Expires 的值通常是一个绝对时间，存在的问题当是客户端和服务器时间不一致或者被修改的情况下就会失效。而 max-age 的值是相对时间，根据浏览器缓存根据服务器返回的 Date 和 Max-Age 判断缓存是否过期。</p>
+<p>打个比方：max-age 相当于说“保质期六个月”，而 Expires 是说“在此日期之前”饮用。</p>
+<p>max-age 和 Expires 设置的缓存过期时间最多为一年（365 天），如果多于这个值则浏览器有可能会忽略</p>
+<p>当 Expires 和 Max-Age 同时存在时，会忽略 Expires 指令。</p>
+<p>作为请求首部时，cache-directive 的可选值</p>
+<table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>no-cache</td>
+<td>告知（代理）服务器不直接使用缓存，要求向原服务器发起请求</td>
+</tr>
+<tr>
+<td>no-store</td>
+<td>所有内容都不会被保存到缓存或 Internet 临时文件中，直接下载文件</td>
+</tr>
+<tr>
+<td>max-age=delta-seconds</td>
+<td>告知服务器客户端希望接收一个存在时间（Age）不大于 delta-seconds 秒的资源, 为 0 表示直接进行协商缓存</td>
+</tr>
+<tr>
+<td>max-stale[=delta-seconds]</td>
+<td>告知（代理）服务器端愿意接收一个超过缓存时间的资源，若定义 delta-seconds 则为 delta-seconds 秒，若没有则为任意超出时间</td>
+</tr>
+<tr>
+<td>min-fresh=delta-seconds</td>
+<td>所有内容都不会被保存到缓存或 Internet 临时文件中</td>
+</tr>
+<tr>
+<td>no-transform</td>
+<td>告知（代理）服务器客户端希望获取实体数据没有被转换（比如压缩）过的资源</td>
+</tr>
+<tr>
+<td>only-if-cached</td>
+<td>告知（代理）服务器客户端希望获取缓存的内容（若有）， 而不用向原服务器发去请求</td>
+</tr>
+<tr>
+<td>cache-extension</td>
+<td>自定义扩展值，若服务器不识别该值将被忽略掉</td>
+</tr>
+</tbody>
+</table>
+<p>Cache-Control 在响应中的字段：<br>字段名称 | 说明<br>–|–<br>public| 指示响应可以被任何缓存所缓存，即使通常它只是非可缓存或可缓存到一个非共享缓存内<br>private| 指示响应信息的全部或者部分用于单个用户，而不能用一个共享缓存来缓存<br>no-cache| 可以缓存，但是只有在跟 WEB 服务器验证了其有效后，才能返回给客户端（直接进行协商缓存）<br>no-store| 所有内容不会被保存到缓存或 Internet 临时文件中，指令的目的是防止无心发布或是保留了敏感信息（例如，备份）<br>no-transform| 告知客户端缓存文件时不得对实体数据做任何改变。它对<strong>转换某个实体体的媒体类型</strong>很有用，例如，一个非透明的代理把图像转换格式，以节省缓存空间，或是减少慢速链接中的通信量<br>only-if-cached| 在某些情况下，如网络连接非常差时，客户端可能需要一个缓存，只返回目前已存储的那些响应，而不是重新加载，或与源服务器重新验证。要做到这一点，客户端可以在一个请求中包含该指令。<br>must-revalidate| 当前资源一定是向原服务器发去验证请求的，若请求失败会返回<strong>504</strong>（而非代理服务器上的缓存）<br>proxy-revalidate| 与 must-revalidate 类似，但是仅能应用于共享缓存（如代理）<br>max-age=delta-seconds| 告知客户端该资源在 delta-seconds 秒内是新鲜的，除非还包含 max-stale 指令，否则客户端不期望接收一个陈旧的响应。<br>s-maxage=delta-seconds| 同 max-age，但仅应用于共享缓存（如代理）<br>cache-extension| 自定义扩展值，若服务器不识别该值将被忽略</p>
+<p><img src="http://qiniu.xienanbo.com/img/20190414121527.png" alt=""></p>
+<h4 id="四、协商缓存"><a href="#四、协商缓存" class="headerlink" title="四、协商缓存"></a>四、协商缓存</h4><p>Last-Modified 和 If-Modified-Since 是用最后修改日期时间判断一个缓存的资源是否有效。</p>
+<ol>
+<li>服务器第一次请求会发送 Last-Modified 响应头</li>
+<li>浏览器下次协商请求时，会将 If-Modified-Since 头加上 缓存响应中的 Last-Modified 值合在一起发送给服务器，</li>
+<li>服务器判断没过期，就会返回 304 状态码，如果过期会直接返回资源</li>
+<li>如果状态码是 304， 浏览器就从缓存中获取资源</li>
+</ol>
+<p>Last-Modified 存在的问题可能是，将打包的前端资源文件夹进行覆盖式部署时，部分文件内容并没有发生变化，但是修改时间却被更新了，此时浏览器会下载资源，造成了不必要的时延和带宽消耗。</p>
+<p>Etag 和 If-None-Match 则是用内容摘要作为判定的依据。内容摘要是指根据一个资源的内容产生一串比较短的数字，当内容变化时，产生的数字串也会改变。内容摘要的算法有很多种，较常见的是 SHA-1 哈希算法、CRC32 等。</p>
+<p>Etag 的运行流程和 Last-Modified 一样：</p>
+<ol>
+<li>第一次请求时，服务器返回文件的 etag</li>
+<li>后面的请求，浏览器将 If-None-Match 头带上缓存响应中的 etag 值合在一起，发送给服务器</li>
+<li>服务器判断没过期，就会返回 304 状态码，如果过期就会直接返回资源。</li>
+<li>如果状态码是 304， 浏览器就从缓存中获取资源</li>
+</ol>
+<p>Etag 的优先级会比 Last-Modified 更高, Etag 就是为了解决 Last-Modified 文件更新时间变化，但文件内容没变的问题，另外 Etag 的缺点在于会占用比 Last-Modified 更高的服务器 CPU 消耗。</p>
+<p><img src="http://qiniu.xienanbo.com/img/20190414122343.png" alt=""></p>
+<h4 id="五、200-和-304"><a href="#五、200-和-304" class="headerlink" title="五、200 和 304"></a>五、200 和 304</h4><p>由以上的知识，我们了解到：</p>
+<blockquote>
+<p>强制缓存返回的 HTTP 响应状态码是 200，而协商缓存返回的响应状态码是 304。</p>
+</blockquote>
+<p>大多数情况是这样没错，但是在部分浏览器中（比如谷歌），协商缓存也是会返回 200 的，这是浏览器的算法使然，浏览器判断，越长时间没有更新的文件，会直接从浏览器缓存中获取资源，此时状态码是 200.</p>
+<p>下面是网上常见强制缓存和协商缓存的流程图，我也画了一个:</p>
+<p><img src="http://qiniu.xienanbo.com/img/20190414101649.jpg" alt=""></p>
+<h4 id="六、缓存更新"><a href="#六、缓存更新" class="headerlink" title="六、缓存更新"></a>六、缓存更新</h4><p>这个问题主要在产品部署发布迭代版本的时候会遇到。</p>
+<blockquote>
+<p>如果服务器没有配置 Last-Modified 和 etag, 当强制缓存还没有失效的时候，如何更新文件版本呢？</p>
+</blockquote>
+<p>目前普遍的做法有两种，不缓存 index.html，在 js,css,字体,图片的链接地址后拼接版本参数：比如</p>
+<blockquote>
+<p><a href="http://cdn.xienanbo.com/logo.png?v=2.2.0" target="_blank" rel="noopener">http://cdn.xienanbo.com/logo.png?v=2.2.0</a></p>
+</blockquote>
+<p>或者将资源文件的内容 HASH 短码添加在文件名中:</p>
+<blockquote>
+<p><a href="http://cdn.xienanbo.com/dist.a87e5ae.js" target="_blank" rel="noopener">http://cdn.xienanbo.com/dist.a87e5ae.js</a></p>
+</blockquote>
+<h4 id="七、谈谈微信浏览器的坑"><a href="#七、谈谈微信浏览器的坑" class="headerlink" title="七、谈谈微信浏览器的坑"></a>七、谈谈微信浏览器的坑</h4><p>微信安卓版内置浏览器符合一般浏览器的缓存策略。但是 iOS 内置浏览器会将 index.html 文件强制缓存，尽管你在 index.html 文件的 head 标签上添加了如下代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Cache-Control"</span> <span class="attr">content</span>=<span class="string">"no-cache, no-store"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Pragma"</span> <span class="attr">content</span>=<span class="string">"no-cache"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"expires"</span> <span class="attr">content</span>=<span class="string">"0"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上面 Pragma 是 HTTP1.0 的消息头，基本没用，仅有 IE 才能识别这段 meta 标签含义。<br>解决方案就是从服务器层面对 index.html 文件进行缓存控制，比如 Nginx：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">location</span> / &#123;</span><br><span class="line">  <span class="attribute">root</span>  /var/www/;</span><br><span class="line">  <span class="attribute">index</span> index.html index.htm;</span><br><span class="line">  <span class="attribute">try_files</span> <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.html;</span><br><span class="line"></span><br><span class="line">  <span class="comment">#### kill cache</span></span><br><span class="line">  <span class="attribute">add_header</span> Last-Modified <span class="variable">$date_gmt</span>;</span><br><span class="line">  <span class="attribute">add_header</span> Cache-Control <span class="string">'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0'</span>;</span><br><span class="line">  <span class="attribute">if_modified_since</span> <span class="literal">off</span>;</span><br><span class="line">  <span class="attribute">expires</span> <span class="literal">off</span>;</span><br><span class="line">  <span class="attribute">etag</span> <span class="literal">off</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="attribute">location</span> <span class="regexp">~* ^.+\.(jpg|jpeg|gif|png|ico|css|js)$</span> &#123;</span><br><span class="line">  <span class="attribute">root</span>  /mnt/dat1/test/tes-app;</span><br><span class="line">  <span class="attribute">access_log</span> <span class="literal">off</span>;</span><br><span class="line">  <span class="attribute">expires</span> <span class="number">30d</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>大公司一般采用 index.html 和 js、css、字体、图片资源利用 CDN 分开部署，不在同一台服务器上，所以只需要对 index.html 设置不缓存即可。</p>
+<p>顺便提一下，如果是字体文件部署在 CDN 上，会存在跨域问题（CSS、JS、图片不会受到同源政策的限制），开启 CORS 即可：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">access</span>-control-allow-origin: *</span><br></pre></td></tr></table></figure>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>浏览器缓存是前端性能优化中关键的一步，利用 GET 请求缓存文件。</p>
+<p>浏览器缓存分为强制缓存和协商缓存，强制缓存中 Cache-Control 比 Expires 的优先级更高。协商缓存中，If-None-Match 比 If-Modified-Since 的优先级更高。</p>
+<p>强制缓存返回状态码 200，协商缓存状态 304。</p>
+<p>前端打包应该利用打包工具对文件名添加 hash 短码，如需校验身份信息应该利用协商缓存和私有缓存。</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://www.zhihu.com/question/20790576" target="_blank" rel="noopener">知乎：大公司里怎样开发和部署前端代码？</a></li>
+<li><a href="https://juejin.im/post/5c4528a6f265da611a4822cc" target="_blank" rel="noopener">掘金：实践这一次,彻底搞懂浏览器缓存机制</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Caching_FAQ" target="_blank" rel="noopener">MDN：HTTP 缓存</a></li>
+<li><a href="https://www.mnot.net/cache_docs/" target="_blank" rel="noopener">Caching Tutorial for Web Authors and Webmasters</a></li>
+</ul>
+<blockquote>
+<p>@Starbucks 2019/04/13</p>
+</blockquote>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://lamborshea.github.io">南瓜</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://lamborshea.github.io/2019/04/14/前端网络编程之缓存策略/">http://lamborshea.github.io/2019/04/14/前端网络编程之缓存策略/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/HTTP/">HTTP</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/03/10/JS模块化编程/">
+        <span class="next-text nav-default">JS模块化编程</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:nanbo0810@email.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://github.com/Lamborshea" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+        
+          <a href="/zhihu.com/people/xienanbo" class="iconfont icon-zhihu" title="zhihu"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2015 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">南瓜</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.9.0"></script>
+
+  </body>
+</html>
